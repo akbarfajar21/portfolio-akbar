@@ -1,0 +1,14 @@
+<svg width="140" height="140" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="hexGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00FFA3"></stop>
+      <stop offset="100%" stop-color="#00D9FF"></stop>
+    </linearGradient>
+  </defs>
+  
+  <polygon points="100,10 180,55 180,145 100,190 20,145 20,55" fill="none" stroke="url(#hexGrad)" stroke-width="8"></polygon>
+
+  <text x="50%" y="55%" text-anchor="middle" fill="url(#hexGrad)" font-size="60" font-family="Poppins, sans-serif" font-weight="700">
+    AF
+  </text>
+</svg>
