@@ -1,403 +1,757 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  FaTrain,
+  FaChalkboardTeacher,
+  FaUsers,
+  FaArrowRight,
+  FaCommentDots,
+} from "react-icons/fa";
 
-const Hero = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+// ── Typewriter hook ───────────────────────────────────────────────────────────
+function useTypewriter(words, speed = 85, pause = 1800) {
+  const [text, setText] = useState("");
+  const [wordIdx, setWordIdx] = useState(0);
+  const [charIdx, setCharIdx] = useState(0);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
-    setIsVisible(true);
+    const current = words[wordIdx % words.length];
+    const delay = deleting
+      ? speed / 2
+      : charIdx === current.length
+        ? pause
+        : speed;
+    const t = setTimeout(() => {
+      if (!deleting && charIdx < current.length) {
+        setText(current.slice(0, charIdx + 1));
+        setCharIdx((c) => c + 1);
+      } else if (!deleting && charIdx === current.length) {
+        setDeleting(true);
+      } else if (deleting && charIdx > 0) {
+        setText(current.slice(0, charIdx - 1));
+        setCharIdx((c) => c - 1);
+      } else {
+        setDeleting(false);
+        setWordIdx((w) => (w + 1) % words.length);
+      }
+    }, delay);
+    return () => clearTimeout(t);
+  }, [charIdx, deleting, wordIdx, words, speed, pause]);
 
-    const handleMouseMove = (e) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth) * 100,
-        y: (e.clientY / window.innerHeight) * 100,
-      });
+  return text;
+}
+
+// ── Particle canvas ───────────────────────────────────────────────────────────
+function ParticleCanvas() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const canvas = ref.current;
+    const ctx = canvas.getContext("2d");
+    let raf;
+    const resize = () => {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
     };
+    resize();
+    window.addEventListener("resize", resize);
 
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    const particles = Array.from({ length: 55 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.4 + 0.3,
+      dx: (Math.random() - 0.5) * 0.22,
+      dy: (Math.random() - 0.5) * 0.22,
+      opacity: Math.random() * 0.4 + 0.08,
+    }));
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((p) => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(45,212,191,${p.opacity})`;
+        ctx.fill();
+        p.x += p.dx;
+        p.y += p.dy;
+        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+      });
+      raf = requestAnimationFrame(draw);
+    };
+    draw();
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", resize);
+    };
   }, []);
+
+  return (
+    <canvas
+      ref={ref}
+      style={{
+        position: "absolute",
+        inset: 0,
+        width: "100%",
+        height: "100%",
+        pointerEvents: "none",
+      }}
+    />
+  );
+}
+
+// ── Main Hero ─────────────────────────────────────────────────────────────────
+const Hero = () => {
+  const [mounted, setMounted] = useState(false);
+  const roles = [
+    "Full Stack Developer",
+    "UI/UX Enthusiast",
+    "IT Educator",
+    "React Specialist",
+  ];
+  const role = useTypewriter(roles);
+
+  useEffect(() => {
+    setTimeout(() => setMounted(true), 80);
+  }, []);
+
+  const stats = [
+    { value: "3+", label: "Tahun Experience" },
+    { value: "20+", label: "Project Selesai" },
+    { value: "8+", label: "Sertifikat" },
+  ];
+
+  const techBadges = [
+    {
+      name: "React.js",
+      color: "#2dd4bf",
+      bg: "rgba(45,212,191,0.08)",
+      border: "rgba(45,212,191,0.22)",
+    },
+    {
+      name: "Supabase",
+      color: "#34d399",
+      bg: "rgba(52,211,153,0.08)",
+      border: "rgba(52,211,153,0.22)",
+    },
+    {
+      name: "Tailwind",
+      color: "#fbbf24",
+      bg: "rgba(251,191,36,0.08)",
+      border: "rgba(251,191,36,0.22)",
+    },
+    {
+      name: "JavaScript",
+      color: "#a78bfa",
+      bg: "rgba(167,139,250,0.08)",
+      border: "rgba(167,139,250,0.22)",
+    },
+  ];
+
+  // Floating badge data — icons instead of emoji
+  const floatingBadges = [
+    {
+      icon: <FaTrain size={11} />,
+      label: "IT PT KAI",
+      color: "#fbbf24",
+      bg: "rgba(251,191,36,0.1)",
+      border: "rgba(251,191,36,0.28)",
+      style: { top: -24, left: -52 },
+      delay: "0s",
+    },
+    {
+      icon: <FaChalkboardTeacher size={11} />,
+      label: "IT Teacher",
+      color: "#2dd4bf",
+      bg: "rgba(45,212,191,0.1)",
+      border: "rgba(45,212,191,0.28)",
+      style: { top: "50%", right: -64 },
+      delay: "0.5s",
+    },
+    {
+      icon: <FaUsers size={11} />,
+      label: "Ex-Ketua OSIS",
+      color: "#34d399",
+      bg: "rgba(52,211,153,0.1)",
+      border: "rgba(52,211,153,0.28)",
+      style: { bottom: -24, left: -24 },
+      delay: "1s",
+    },
+  ];
 
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center overflow-hidden bg-black"
+      style={{
+        position: "relative",
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden",
+        background: "#0d0d0f",
+        fontFamily: "'Inter', sans-serif",
+      }}
     >
-      {/* Dynamic gradient background */}
-      <div
-        className="absolute inset-0 opacity-80"
-        style={{
-          background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, 
-            rgba(59, 130, 246, 0.15) 0%, 
-            rgba(147, 51, 234, 0.1) 25%, 
-            rgba(239, 68, 68, 0.05) 50%, 
-            transparent 70%)`,
-        }}
-      ></div>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-      {/* Animated mesh gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900"></div>
-
-      {/* Floating geometric shapes */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-blue-400 rounded-full animate-ping"></div>
-        <div className="absolute top-3/4 right-1/4 w-1 h-1 bg-purple-400 rounded-full animate-ping delay-1000"></div>
-        <div className="absolute top-1/2 left-3/4 w-1.5 h-1.5 bg-pink-400 rounded-full animate-ping delay-500"></div>
-
-        {/* Large floating elements */}
-        <div className="absolute -top-40 -left-40 w-80 h-80 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-full blur-3xl animate-float-delayed"></div>
-      </div>
-
-      {/* Grid overlay with glow effect */}
-      <div className="absolute inset-0 opacity-10">
-        <div
-          className="h-full w-full"
-          style={{
-            backgroundImage: `linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
-                             linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)`,
-            backgroundSize: "60px 60px",
-          }}
-        ></div>
-      </div>
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-16 lg:gap-20">
-          {/* LEFT - Content */}
-          <div
-            className={`space-y-10 transform transition-all duration-1200 ${
-              isVisible
-                ? "translate-y-0 opacity-100"
-                : "translate-y-16 opacity-0"
-            }`}
-          >
-            {/* Exclusive badge */}
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 backdrop-blur-xl">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse mr-3"></div>
-              <span className="text-sm font-medium text-gray-300">
-                Available for Projects
-              </span>
-            </div>
-
-            {/* Main heading with enhanced typography */}
-            <div className="space-y-6">
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black leading-none tracking-tight">
-                <span className="block text-white/90 mb-2">Hai, Saya</span>
-                <span className="block relative">
-                  <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-gradient-shift">
-                    Muhammad Akbar
-                  </span>
-                  <div className="absolute -inset-1 bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-pink-400/20 blur-lg opacity-75 animate-pulse-glow"></div>
-                </span>
-              </h1>
-
-              <div className="flex items-center space-x-4">
-                <div className="h-px w-12 bg-gradient-to-r from-blue-400 to-purple-400"></div>
-                <span className="text-xl sm:text-2xl font-semibold text-gray-300 tracking-wide">
-                  Full Stack Developer
-                </span>
-                <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-                  <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse delay-100"></div>
-                  <div className="w-2 h-2 bg-pink-400 rounded-full animate-pulse delay-200"></div>
-                </div>
-              </div>
-            </div>
-
-            {/* Enhanced description */}
-            <div className="space-y-6">
-              <p className="text-lg text-gray-400 leading-relaxed max-w-xl font-light">
-                Saya{" "}
-                <span className="text-white font-semibold">
-                  Muhammad Akbar Fajar Fadillah Tandean
-                </span>
-                , developer berpengalaman dari Tambun, Bekasi yang berfokus pada
-                pembuatan
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 font-semibold">
-                  {" "}
-                  aplikasi web modern
-                </span>{" "}
-                dengan teknologi terdepan.
-              </p>
-
-              {/* Tech stack with icons */}
-              <div className="flex flex-wrap gap-4">
-                <div className="group flex items-center space-x-2 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500/10 to-blue-600/10 border border-blue-500/20 backdrop-blur hover:from-blue-500/20 hover:to-blue-600/20 transition-all duration-300">
-                  <div className="w-3 h-3 bg-blue-400 rounded-full group-hover:animate-spin"></div>
-                  <span className="text-blue-300 font-medium text-sm">
-                    React.js
-                  </span>
-                </div>
-                <div className="group flex items-center space-x-2 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-500/10 to-purple-600/10 border border-purple-500/20 backdrop-blur hover:from-purple-500/20 hover:to-purple-600/20 transition-all duration-300">
-                  <div className="w-3 h-3 bg-purple-400 rounded-full group-hover:animate-bounce"></div>
-                  <span className="text-purple-300 font-medium text-sm">
-                    Tailwind CSS
-                  </span>
-                </div>
-                <div className="group flex items-center space-x-2 px-4 py-2 rounded-xl bg-gradient-to-r from-green-500/10 to-green-600/10 border border-green-500/20 backdrop-blur hover:from-green-500/20 hover:to-green-600/20 transition-all duration-300">
-                  <div className="w-3 h-3 bg-green-400 rounded-full group-hover:animate-pulse"></div>
-                  <span className="text-green-300 font-medium text-sm">
-                    Supabase
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Premium achievement badges */}
-            <div className="flex flex-wrap gap-3">
-              <div className="px-4 py-2 bg-gradient-to-r from-amber-500/10 to-yellow-500/10 border border-amber-500/20 text-amber-300 text-sm font-medium rounded-xl backdrop-blur">
-                🏆 Ex-Ketua OSIS UNISCO
-              </div>
-              <div className="px-4 py-2 bg-gradient-to-r from-emerald-500/10 to-green-500/10 border border-emerald-500/20 text-emerald-300 text-sm font-medium rounded-xl backdrop-blur">
-                💼 IT Support PT KAI
-              </div>
-              <div className="px-4 py-2 bg-gradient-to-r from-violet-500/10 to-purple-500/10 border border-violet-500/20 text-violet-300 text-sm font-medium rounded-xl backdrop-blur">
-                🎓 IT Teacher
-              </div>
-            </div>
-
-            {/* Premium CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-6 pt-6">
-              <a
-                href="#projects"
-                className="group relative px-8 py-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white font-bold rounded-2xl overflow-hidden shadow-2xl hover:shadow-blue-500/25 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1"
-              >
-                <span className="relative z-10 flex items-center justify-center text-lg">
-                  Eksplorasi Proyek
-                  <svg
-                    className="w-5 h-5 ml-3 group-hover:translate-x-2 transition-transform duration-300"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M13 7l5 5m0 0l-5 5m5-5H6"
-                    />
-                  </svg>
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-shimmer"></div>
-              </a>
-
-              <a
-                href="#contact"
-                className="group px-8 py-4 bg-white/5 backdrop-blur-xl border border-white/10 text-white font-bold rounded-2xl hover:bg-white/10 hover:border-white/20 transition-all duration-500 flex items-center justify-center shadow-xl hover:shadow-2xl hover:-translate-y-1 text-lg"
-              >
-                Mari Berkolaborasi
-                <svg
-                  className="w-5 h-5 ml-3 group-hover:rotate-12 transition-transform duration-300"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                  />
-                </svg>
-              </a>
-            </div>
-          </div>
-
-          {/* RIGHT - Enhanced Image */}
-          <div
-            className={`flex justify-center lg:justify-end transform transition-all duration-1200 delay-300 ${
-              isVisible
-                ? "translate-y-0 opacity-100"
-                : "translate-y-16 opacity-0"
-            }`}
-          >
-            <div className="relative group">
-              {/* Outer glow ring */}
-              <div className="absolute -inset-8 bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-pink-500/30 rounded-full blur-3xl opacity-60 group-hover:opacity-80 transition-opacity duration-700 animate-pulse-glow"></div>
-
-              {/* Floating elements around image */}
-              <div className="absolute -top-6 -right-6 w-12 h-12 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-2xl rotate-12 animate-float shadow-lg shadow-blue-400/25"></div>
-              <div className="absolute -bottom-8 -left-8 w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-400 rounded-3xl -rotate-12 animate-float-delayed shadow-lg shadow-purple-400/25"></div>
-              <div className="absolute top-1/2 -right-12 w-8 h-8 bg-gradient-to-br from-pink-400 to-red-400 rounded-xl rotate-45 animate-float shadow-lg shadow-pink-400/25"></div>
-
-              {/* Main image container with enhanced styling */}
-              <div className="relative w-80 h-80 lg:w-[420px] lg:h-[420px]">
-                {/* Animated border */}
-                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 via-pink-500 to-blue-500 animate-border-spin p-1">
-                  <div className="w-full h-full rounded-full bg-black"></div>
-                </div>
-
-                {/* Image container */}
-                <div className="absolute inset-2 bg-gradient-to-br from-slate-800 to-slate-900 rounded-full shadow-2xl overflow-hidden border border-white/10">
-                  <img
-                    src="./foto-akbar.jpg"
-                    alt="Muhammad Akbar"
-                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-700 filter hover:brightness-110"
-                  />
-
-                  {/* Image overlay effects */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                </div>
-              </div>
-
-              {/* Enhanced floating badges with animations */}
-              <div className="absolute -top-4 left-8 px-4 py-2 bg-black/80 backdrop-blur-xl border border-blue-500/30 rounded-2xl shadow-xl text-sm font-bold text-blue-300 animate-float">
-                <span className="flex items-center">
-                  <span className="w-2 h-2 bg-blue-400 rounded-full mr-2 animate-pulse"></span>
-                  React Expert
-                </span>
-              </div>
-
-              <div className="absolute top-1/2 -right-8 px-4 py-2 bg-black/80 backdrop-blur-xl border border-purple-500/30 rounded-2xl shadow-xl text-sm font-bold text-purple-300 animate-float-delayed">
-                <span className="flex items-center">
-                  <span className="w-2 h-2 bg-purple-400 rounded-full mr-2 animate-pulse"></span>
-                  UI/UX Design
-                </span>
-              </div>
-
-              <div className="absolute -bottom-4 left-12 px-4 py-2 bg-black/80 backdrop-blur-xl border border-green-500/30 rounded-2xl shadow-xl text-sm font-bold text-green-300 animate-float">
-                <span className="flex items-center">
-                  <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
-                  Full Stack
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Enhanced scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-        <div className="flex flex-col items-center space-y-2 animate-bounce">
-          <span className="text-xs text-gray-400 font-medium tracking-wider">
-            SCROLL
-          </span>
-          <div className="w-6 h-10 border-2 border-gray-600/50 rounded-full flex justify-center backdrop-blur">
-            <div className="w-1 h-3 bg-gradient-to-b from-blue-400 to-purple-400 rounded-full mt-2 animate-scroll-indicator"></div>
-          </div>
-        </div>
-      </div>
-
-      <style jsx>{`
-        @keyframes gradient-shift {
-          0%,
-          100% {
-            background-size: 300% 300%;
-            background-position: 0% 50%;
-          }
-          50% {
-            background-size: 300% 300%;
-            background-position: 100% 50%;
-          }
+        .hex-frame {
+          clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
         }
 
-        @keyframes pulse-glow {
-          0%,
-          100% {
-            opacity: 0.5;
-            transform: scale(1);
-          }
-          50% {
-            opacity: 1;
-            transform: scale(1.02);
-          }
+        @keyframes h-fade-up {
+          from { opacity:0; transform:translateY(28px); }
+          to   { opacity:1; transform:translateY(0); }
+        }
+        @keyframes h-fade-left {
+          from { opacity:0; transform:translateX(28px); }
+          to   { opacity:1; transform:translateX(0); }
+        }
+        @keyframes cursor-blink {
+          0%,100% { opacity:1; } 50% { opacity:0; }
+        }
+        @keyframes orbit-ring {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(360deg); }
+        }
+        @keyframes orb1 {
+          from { transform: rotate(0deg) translateX(148px) rotate(0deg); }
+          to   { transform: rotate(360deg) translateX(148px) rotate(-360deg); }
+        }
+        @keyframes orb2 {
+          from { transform: rotate(120deg) translateX(148px) rotate(-120deg); }
+          to   { transform: rotate(480deg) translateX(148px) rotate(-480deg); }
+        }
+        @keyframes orb3 {
+          from { transform: rotate(240deg) translateX(148px) rotate(-240deg); }
+          to   { transform: rotate(600deg) translateX(148px) rotate(-600deg); }
+        }
+        @keyframes hex-pulse {
+          0%,100% { box-shadow: none; filter: drop-shadow(0 0 18px rgba(45,212,191,0.3)); }
+          50%      { filter: drop-shadow(0 0 32px rgba(45,212,191,0.55)); }
+        }
+        @keyframes badge-float {
+          0%,100% { transform: translateY(0); }
+          50%      { transform: translateY(-5px); }
+        }
+        @keyframes scroll-hint {
+          0%   { opacity:0; transform:translateY(-6px); }
+          50%  { opacity:1; }
+          100% { opacity:0; transform:translateY(6px); }
         }
 
-        @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0px) rotate(0deg);
-          }
-          25% {
-            transform: translateY(-10px) rotate(1deg);
-          }
-          50% {
-            transform: translateY(-5px) rotate(-1deg);
-          }
-          75% {
-            transform: translateY(-15px) rotate(1deg);
-          }
-        }
+        .h-fade-up   { animation: h-fade-up  0.8s ease forwards; }
+        .h-fade-left { animation: h-fade-left 0.8s ease 0.2s forwards; opacity:0; }
+        .cursor      { animation: cursor-blink 1s step-end infinite; }
+        .hex-glow    { animation: hex-pulse 3s ease-in-out infinite; }
+        .scroll-dot  { animation: scroll-hint 2s ease infinite; }
 
-        @keyframes float-delayed {
-          0%,
-          100% {
-            transform: translateY(0px) rotate(0deg);
-          }
-          25% {
-            transform: translateY(-15px) rotate(-1deg);
-          }
-          50% {
-            transform: translateY(-5px) rotate(1deg);
-          }
-          75% {
-            transform: translateY(-10px) rotate(-1deg);
-          }
-        }
+        .orb-ring { position:absolute; animation: orbit-ring 28s linear infinite; }
+        .orb1 { position:absolute; animation: orb1 9s linear infinite; }
+        .orb2 { position:absolute; animation: orb2 9s linear infinite; }
+        .orb3 { position:absolute; animation: orb3 9s linear infinite; }
 
-        @keyframes border-spin {
-          0% {
-            transform: rotate(0deg);
-          }
-          100% {
-            transform: rotate(360deg);
-          }
-        }
+        .stat-card { transition: transform 0.28s ease, box-shadow 0.28s ease; cursor:default; }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 10px 24px rgba(45,212,191,0.14); }
 
-        @keyframes scroll-indicator {
-          0% {
-            opacity: 0;
-            transform: translateY(-10px) scaleY(0.5);
-          }
-          50% {
-            opacity: 1;
-            transform: translateY(0px) scaleY(1);
-          }
-          100% {
-            opacity: 0;
-            transform: translateY(10px) scaleY(0.5);
-          }
-        }
+        .tech-pill { transition: transform 0.22s ease; }
+        .tech-pill:hover { transform: translateY(-2px); }
 
-        @keyframes shimmer {
-          0% {
-            transform: translateX(-100%);
-          }
-          100% {
-            transform: translateX(100%);
-          }
-        }
+        .cta-main { transition: all 0.28s ease; }
+        .cta-main:hover { transform: translateY(-2px); box-shadow: 0 14px 36px rgba(45,212,191,0.32) !important; }
 
-        .animate-gradient-shift {
-          background-size: 300% 300%;
-          animation: gradient-shift 4s ease infinite;
-        }
+        .cta-ghost { transition: all 0.28s ease; }
+        .cta-ghost:hover { transform: translateY(-2px); background: rgba(255,255,255,0.07) !important; }
 
-        .animate-pulse-glow {
-          animation: pulse-glow 3s ease-in-out infinite;
-        }
-
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
-        }
-
-        .animate-float-delayed {
-          animation: float-delayed 6s ease-in-out infinite;
-        }
-
-        .animate-border-spin {
-          animation: border-spin 8s linear infinite;
-        }
-
-        .animate-scroll-indicator {
-          animation: scroll-indicator 2s ease-in-out infinite;
-        }
-
-        .animate-shimmer {
-          animation: shimmer 2s ease-in-out;
+        @media (max-width: 900px) {
+          .hero-grid { grid-template-columns: 1fr !important; gap: 48px !important; }
+          .hero-grid > div:first-child { order: 2; }
+          .hero-grid > div:last-child  { order: 1; }
         }
       `}</style>
+
+      {/* Particles */}
+      <ParticleCanvas />
+
+      {/* Ambient glows */}
+      <div
+        style={{
+          position: "absolute",
+          right: "8%",
+          top: "50%",
+          transform: "translateY(-50%)",
+          width: 480,
+          height: 480,
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(45,212,191,0.06) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          left: "-4%",
+          bottom: "0%",
+          width: 380,
+          height: 380,
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(251,191,36,0.05) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* ── Content grid ── */}
+      <div
+        className="hero-grid"
+        style={{
+          position: "relative",
+          zIndex: 10,
+          maxWidth: 1180,
+          width: "100%",
+          margin: "0 auto",
+          padding: "88px 24px 64px",
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: 72,
+          alignItems: "center",
+        }}
+      >
+        {/* ════ LEFT ════ */}
+        <div
+          className={mounted ? "h-fade-up" : ""}
+          style={{ opacity: mounted ? undefined : 0 }}
+        >
+          {/* Status chip */}
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "5px 14px 5px 10px",
+              borderRadius: 999,
+              background: "rgba(52,211,153,0.07)",
+              border: "1px solid rgba(52,211,153,0.2)",
+              marginBottom: 26,
+            }}
+          >
+            <span
+              style={{
+                width: 8,
+                height: 8,
+                borderRadius: "50%",
+                background: "#34d399",
+                boxShadow: "0 0 8px rgba(52,211,153,0.75)",
+                flexShrink: 0,
+              }}
+            />
+            <span style={{ fontSize: 13, color: "#34d399", fontWeight: 500 }}>
+              Open to Opportunities
+            </span>
+          </div>
+
+          {/* Name */}
+          <h1
+            style={{
+              margin: "0 0 10px",
+              fontSize: "clamp(2.2rem, 4.8vw, 3.3rem)",
+              fontWeight: 900,
+              lineHeight: 1.08,
+              letterSpacing: "-0.03em",
+              color: "#f1f5f9",
+            }}
+          >
+            Muhammad
+            <span
+              style={{
+                display: "block",
+                background:
+                  "linear-gradient(135deg, #2dd4bf 0%, #34d399 50%, #fbbf24 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              Akbar Fajar
+            </span>
+          </h1>
+
+          {/* Typewriter */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              marginBottom: 24,
+            }}
+          >
+            <div
+              style={{
+                width: 32,
+                height: 2,
+                background: "linear-gradient(90deg, #2dd4bf, transparent)",
+                flexShrink: 0,
+              }}
+            />
+            <p
+              style={{
+                margin: 0,
+                fontSize: "clamp(0.95rem, 2vw, 1.15rem)",
+                fontWeight: 500,
+                color: "#64748b",
+                minWidth: 220,
+              }}
+            >
+              <span style={{ color: "#e2e8f0" }}>{role}</span>
+              <span
+                className="cursor"
+                style={{ color: "#2dd4bf", marginLeft: 1 }}
+              >
+                |
+              </span>
+            </p>
+          </div>
+
+          {/* Description */}
+          <p
+            style={{
+              margin: "0 0 28px",
+              fontSize: "0.93rem",
+              lineHeight: 1.82,
+              color: "#475569",
+              maxWidth: 490,
+            }}
+          >
+            Developer dari{" "}
+            <span style={{ color: "#94a3b8", fontWeight: 500 }}>
+              Tambun, Bekasi
+            </span>{" "}
+            dengan pengalaman sebagai{" "}
+            <span style={{ color: "#2dd4bf", fontWeight: 600 }}>
+              IT Support PT KAI
+            </span>{" "}
+            dan{" "}
+            <span style={{ color: "#fbbf24", fontWeight: 600 }}>
+              IT Teacher
+            </span>{" "}
+            — membangun solusi digital yang cepat, bersih, dan modern.
+          </p>
+
+          {/* Tech pills */}
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 8,
+              marginBottom: 36,
+            }}
+          >
+            {techBadges.map((t, i) => (
+              <span
+                key={i}
+                className="tech-pill"
+                style={{
+                  padding: "5px 13px",
+                  borderRadius: 7,
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: t.color,
+                  background: t.bg,
+                  border: `1px solid ${t.border}`,
+                  letterSpacing: "0.01em",
+                }}
+              >
+                {t.name}
+              </span>
+            ))}
+          </div>
+
+          {/* CTA buttons */}
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 12,
+              marginBottom: 44,
+            }}
+          >
+            <a
+              href="#projects"
+              className="cta-main"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 7,
+                padding: "11px 26px",
+                borderRadius: 10,
+                background: "linear-gradient(135deg, #2dd4bf 0%, #059669 100%)",
+                color: "#0d0d0f",
+                fontWeight: 700,
+                fontSize: "0.9rem",
+                textDecoration: "none",
+                letterSpacing: "0.02em",
+                boxShadow: "0 6px 22px rgba(45,212,191,0.25)",
+              }}
+            >
+              Lihat Proyek <FaArrowRight size={13} />
+            </a>
+            <a
+              href="#contact"
+              className="cta-ghost"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 7,
+                padding: "11px 26px",
+                borderRadius: 10,
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                color: "#cbd5e1",
+                fontWeight: 600,
+                fontSize: "0.9rem",
+                textDecoration: "none",
+              }}
+            >
+              Hubungi Saya <FaCommentDots size={13} />
+            </a>
+          </div>
+
+          {/* Stats */}
+          <div
+            style={{
+              display: "flex",
+              gap: 14,
+              paddingTop: 24,
+              borderTop: "1px solid rgba(255,255,255,0.05)",
+            }}
+          >
+            {stats.map((s, i) => (
+              <div
+                key={i}
+                className="stat-card"
+                style={{
+                  flex: 1,
+                  padding: "12px 14px",
+                  borderRadius: 10,
+                  textAlign: "center",
+                  background: "rgba(255,255,255,0.02)",
+                  border: "1px solid rgba(255,255,255,0.05)",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: "1.45rem",
+                    fontWeight: 800,
+                    color: "#2dd4bf",
+                    lineHeight: 1.1,
+                  }}
+                >
+                  {s.value}
+                </div>
+                <div
+                  style={{
+                    fontSize: 10,
+                    color: "#334155",
+                    fontWeight: 600,
+                    marginTop: 4,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.06em",
+                  }}
+                >
+                  {s.label}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ════ RIGHT — Photo ════ */}
+        <div
+          className={mounted ? "h-fade-left" : ""}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "relative",
+          }}
+        >
+          {/* Orbit ring container */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              pointerEvents: "none",
+            }}
+          >
+            <div
+              className="orb-ring"
+              style={{
+                width: 316,
+                height: 316,
+                borderRadius: "50%",
+                border: "1px dashed rgba(45,212,191,0.1)",
+                position: "absolute",
+              }}
+            />
+            <div className="orb1" style={{ position: "absolute" }}>
+              <div
+                style={{
+                  width: 9,
+                  height: 9,
+                  borderRadius: "50%",
+                  background: "#2dd4bf",
+                  boxShadow: "0 0 10px rgba(45,212,191,0.85)",
+                }}
+              />
+            </div>
+            <div className="orb2" style={{ position: "absolute" }}>
+              <div
+                style={{
+                  width: 7,
+                  height: 7,
+                  borderRadius: "50%",
+                  background: "#fbbf24",
+                  boxShadow: "0 0 10px rgba(251,191,36,0.85)",
+                }}
+              />
+            </div>
+            <div className="orb3" style={{ position: "absolute" }}>
+              <div
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: "#34d399",
+                  boxShadow: "0 0 10px rgba(52,211,153,0.85)",
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Hexagon photo frame */}
+          <div style={{ position: "relative", zIndex: 2 }}>
+            <div
+              className="hex-frame hex-glow"
+              style={{
+                width: 272,
+                height: 272,
+                background:
+                  "linear-gradient(135deg, #2dd4bf, #34d399, #fbbf24)",
+                padding: 3,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <div
+                className="hex-frame"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  overflow: "hidden",
+                  background: "#111116",
+                }}
+              >
+                <img
+                  src="./foto-akbar.jpg"
+                  alt="Muhammad Akbar"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    transition: "transform 0.55s ease",
+                    filter: "brightness(0.92)",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.target.style.transform = "scale(1.07)")
+                  }
+                  onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
+                />
+              </div>
+            </div>
+
+            {/* Floating badges — icons only, no emoji */}
+            {floatingBadges.map((badge, i) => (
+              <div
+                key={i}
+                style={{
+                  position: "absolute",
+                  ...badge.style,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  padding: "6px 12px",
+                  borderRadius: 9,
+                  background: badge.bg,
+                  border: `1px solid ${badge.border}`,
+                  color: badge.color,
+                  fontSize: 11,
+                  fontWeight: 600,
+                  whiteSpace: "nowrap",
+                  backdropFilter: "blur(12px)",
+                  animation: `badge-float 3s ease-in-out ${badge.delay} infinite`,
+                  zIndex: 10,
+                }}
+              >
+                <span style={{ opacity: 0.85 }}>{badge.icon}</span>
+                {badge.label}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── Scroll indicator ── */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: 24,
+          left: "50%",
+          transform: "translateX(-50%)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 6,
+        }}
+      >
+        <span
+          style={{
+            fontSize: 9,
+            letterSpacing: "0.2em",
+            color: "#1e293b",
+            textTransform: "uppercase",
+            fontWeight: 700,
+          }}
+        >
+          Scroll
+        </span>
+        <div
+          style={{
+            width: 22,
+            height: 36,
+            border: "1.5px solid rgba(255,255,255,0.08)",
+            borderRadius: 11,
+            display: "flex",
+            justifyContent: "center",
+            paddingTop: 7,
+          }}
+        >
+          <div
+            className="scroll-dot"
+            style={{
+              width: 3,
+              height: 7,
+              borderRadius: 2,
+              background: "linear-gradient(to bottom, #2dd4bf, #34d399)",
+            }}
+          />
+        </div>
+      </div>
     </section>
   );
 };

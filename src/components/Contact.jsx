@@ -1,218 +1,644 @@
-import React, { useState } from "react";
-import { Mail, Send, User, MessageCircle } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  FaEnvelope,
+  FaGithub,
+  FaLinkedin,
+  FaInstagram,
+  FaPaperPlane,
+  FaUser,
+  FaCommentDots,
+  FaCheckCircle,
+} from "react-icons/fa";
+
+const socialLinks = [
+  {
+    label: "GitHub",
+    href: "https://github.com/akbarfajar21",
+    icon: <FaGithub size={17} />,
+    accent: "#94a3b8",
+  },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/akbar-fajar-3a9220350?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
+    icon: <FaLinkedin size={17} />,
+    accent: "#38bdf8",
+  },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/akbarfajarrr.rr?igsh=bXhkcnI4c3Z1aTY0&utm_source=qr",
+    icon: <FaInstagram size={17} />,
+    accent: "#f472b6",
+  },
+];
 
 const Contact = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [focusedField, setFocusedField] = useState(null);
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
+    name: "",
+    email: "",
+    message: "",
   });
+  const [focusedField, setFocusedField] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
-  const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+  const headerRef = useRef(null);
+  const [headerVisible, setHeaderVisible] = useState(false);
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) setHeaderVisible(true);
+      },
+      { threshold: 0.2 },
+    );
+    if (headerRef.current) obs.observe(headerRef.current);
+    return () => obs.disconnect();
+  }, []);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Create form data for submission
     const form = new FormData();
-    form.append('name', formData.name);
-    form.append('email', formData.email);
-    form.append('message', formData.message);
-    
+    form.append("name", formData.name);
+    form.append("email", formData.email);
+    form.append("message", formData.message);
     try {
-      await fetch('https://formspree.io/f/xpwrnzrg', {
-        method: 'POST',
+      await fetch("https://formspree.io/f/xpwrnzrg", {
+        method: "POST",
         body: form,
-        headers: {
-          'Accept': 'application/json'
-        }
+        headers: { Accept: "application/json" },
       });
-      // Reset form after successful submission
-      setFormData({ name: '', email: '', message: '' });
-    } catch (error) {
-      console.error('Error submitting form:', error);
+      setFormData({ name: "", email: "", message: "" });
+      setSubmitted(true);
+      setTimeout(() => setSubmitted(false), 4000);
+    } catch (err) {
+      console.error(err);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  return (
-    <section id="contact" className="relative py-32 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse"></div>
-      </div>
+  // Input field style helper
+  const inputStyle = (field) => ({
+    width: "100%",
+    padding: "11px 14px",
+    borderRadius: 10,
+    background:
+      focusedField === field
+        ? "rgba(45,212,191,0.06)"
+        : "rgba(255,255,255,0.03)",
+    border: `1px solid ${focusedField === field ? "rgba(45,212,191,0.4)" : "rgba(255,255,255,0.08)"}`,
+    color: "#e2e8f0",
+    fontSize: "0.88rem",
+    outline: "none",
+    transition: "all 0.25s ease",
+    fontFamily: "'Inter', sans-serif",
+    boxSizing: "border-box",
+    boxShadow:
+      focusedField === field ? "0 0 0 3px rgba(45,212,191,0.08)" : "none",
+  });
 
-      <div className="relative max-w-6xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 mb-6">
-            <MessageCircle className="w-4 h-4 text-purple-400 mr-2" />
-            <span className="text-white/80 text-sm font-medium">Mari Berkolaborasi</span>
+  return (
+    <section
+      id="contact"
+      style={{
+        background: "#0d0d0f",
+        padding: "100px 0 80px",
+        fontFamily: "'Inter', sans-serif",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        @keyframes contact-fade-up {
+          from { opacity:0; transform:translateY(24px); }
+          to   { opacity:1; transform:translateY(0); }
+        }
+        .contact-fade-up { animation: contact-fade-up 0.7s ease forwards; }
+        ::placeholder { color: #334155 !important; }
+        textarea { resize: vertical; }
+      `}</style>
+
+      {/* Ambient glows */}
+      <div
+        style={{
+          position: "absolute",
+          top: "5%",
+          left: "15%",
+          width: 320,
+          height: 320,
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(45,212,191,0.05) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          bottom: "10%",
+          right: "5%",
+          width: 260,
+          height: 260,
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(251,191,36,0.04) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }}
+      />
+
+      <div style={{ maxWidth: 1000, margin: "0 auto", padding: "0 24px" }}>
+        {/* ── Header ── */}
+        <div
+          ref={headerRef}
+          className={headerVisible ? "contact-fade-up" : ""}
+          style={{
+            opacity: headerVisible ? 1 : 0,
+            textAlign: "center",
+            marginBottom: 52,
+          }}
+        >
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "5px 14px",
+              borderRadius: 999,
+              marginBottom: 18,
+              background: "rgba(45,212,191,0.07)",
+              border: "1px solid rgba(45,212,191,0.18)",
+            }}
+          >
+            <FaCommentDots size={12} style={{ color: "#2dd4bf" }} />
+            <span
+              style={{
+                fontSize: 13,
+                color: "#2dd4bf",
+                fontWeight: 600,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+              }}
+            >
+              Kontak
+            </span>
           </div>
-          
-          <h2 className="text-6xl font-bold bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent mb-6 leading-tight">
-            Hubungi Saya
+
+          <h2
+            style={{
+              margin: "0 0 14px",
+              fontSize: "clamp(2rem, 4vw, 2.8rem)",
+              fontWeight: 900,
+              color: "#f1f5f9",
+              letterSpacing: "-0.03em",
+              lineHeight: 1.1,
+            }}
+          >
+            Mari{" "}
+            <span
+              style={{
+                background:
+                  "linear-gradient(135deg, #2dd4bf 0%, #34d399 50%, #fbbf24 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              Berkolaborasi
+            </span>
           </h2>
-          
-          <p className="text-xl text-white/70 max-w-2xl mx-auto leading-relaxed">
-            Punya proyek menarik, ide brilian, atau ingin berkolaborasi? 
-            <br />
-            <span className="text-purple-300">Mari wujudkan sesuatu yang luar biasa bersama!</span>
+
+          <p
+            style={{
+              margin: "0 auto",
+              maxWidth: 420,
+              fontSize: "0.95rem",
+              color: "#475569",
+              lineHeight: 1.75,
+            }}
+          >
+            Punya proyek menarik atau ingin berkolaborasi? Kirim pesan dan saya
+            akan segera merespons.
           </p>
+
+          {/* Divider */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 14,
+              marginTop: 22,
+            }}
+          >
+            <div
+              style={{
+                height: 1,
+                width: 60,
+                background:
+                  "linear-gradient(90deg, transparent, rgba(45,212,191,0.3))",
+              }}
+            />
+            <div
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: "#2dd4bf",
+                boxShadow: "0 0 8px rgba(45,212,191,0.7)",
+              }}
+            />
+            <div
+              style={{
+                height: 1,
+                width: 60,
+                background:
+                  "linear-gradient(90deg, rgba(45,212,191,0.3), transparent)",
+              }}
+            />
+          </div>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
-          {/* Contact Form */}
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl blur-xl"></div>
-            <div className="relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-8 space-y-6">
-              <div className="space-y-6">
-                {/* Name Field */}
-                <div className="group">
-                  <label className="flex items-center text-white/90 mb-3 font-medium">
-                    <User className="w-4 h-4 mr-2 text-purple-400" />
+        {/* ── Two-column layout ── */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 380px",
+            gap: 20,
+            opacity: headerVisible ? 1 : 0,
+            transform: headerVisible ? "translateY(0)" : "translateY(20px)",
+            transition: "all 0.7s ease 0.25s",
+          }}
+          className="contact-grid"
+        >
+          {/* ════ LEFT — Form ════ */}
+          <div
+            style={{
+              borderRadius: 14,
+              background: "rgba(255,255,255,0.025)",
+              border: "1px solid rgba(255,255,255,0.07)",
+              padding: "28px 28px",
+            }}
+          >
+            {/* Top accent */}
+            <div
+              style={{
+                height: 2,
+                borderRadius: 2,
+                background:
+                  "linear-gradient(90deg, #2dd4bf, #34d399, transparent)",
+                marginBottom: 24,
+              }}
+            />
+
+            <form onSubmit={handleSubmit}>
+              <div
+                style={{ display: "flex", flexDirection: "column", gap: 18 }}
+              >
+                {/* Name */}
+                <div>
+                  <label
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 6,
+                      fontSize: "0.8rem",
+                      fontWeight: 600,
+                      color: "#64748b",
+                      marginBottom: 8,
+                      letterSpacing: "0.03em",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    <FaUser size={10} style={{ color: "#2dd4bf" }} />
                     Nama Lengkap
                   </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      required
-                      onFocus={() => setFocusedField('name')}
-                      onBlur={() => setFocusedField(null)}
-                      className="w-full px-4 py-4 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 backdrop-blur-sm"
-                      placeholder="Masukkan nama lengkap Anda"
-                    />
-                    <div className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-300 ${focusedField === 'name' ? 'w-full' : 'w-0'}`}></div>
-                  </div>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    onFocus={() => setFocusedField("name")}
+                    onBlur={() => setFocusedField(null)}
+                    placeholder="Masukkan nama lengkap Anda"
+                    required
+                    style={inputStyle("name")}
+                  />
                 </div>
 
-                {/* Email Field */}
-                <div className="group">
-                  <label className="flex items-center text-white/90 mb-3 font-medium">
-                    <Mail className="w-4 h-4 mr-2 text-purple-400" />
+                {/* Email */}
+                <div>
+                  <label
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 6,
+                      fontSize: "0.8rem",
+                      fontWeight: 600,
+                      color: "#64748b",
+                      marginBottom: 8,
+                      letterSpacing: "0.03em",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    <FaEnvelope size={10} style={{ color: "#2dd4bf" }} />
                     Email Address
                   </label>
-                  <div className="relative">
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                      onFocus={() => setFocusedField('email')}
-                      onBlur={() => setFocusedField(null)}
-                      className="w-full px-4 py-4 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 backdrop-blur-sm"
-                      placeholder="nama@email.com"
-                    />
-                    <div className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-300 ${focusedField === 'email' ? 'w-full' : 'w-0'}`}></div>
-                  </div>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    onFocus={() => setFocusedField("email")}
+                    onBlur={() => setFocusedField(null)}
+                    placeholder="nama@email.com"
+                    required
+                    style={inputStyle("email")}
+                  />
                 </div>
 
-                {/* Message Field */}
-                <div className="group">
-                  <label className="flex items-center text-white/90 mb-3 font-medium">
-                    <MessageCircle className="w-4 h-4 mr-2 text-purple-400" />
+                {/* Message */}
+                <div>
+                  <label
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 6,
+                      fontSize: "0.8rem",
+                      fontWeight: 600,
+                      color: "#64748b",
+                      marginBottom: 8,
+                      letterSpacing: "0.03em",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    <FaCommentDots size={10} style={{ color: "#2dd4bf" }} />
                     Pesan Anda
                   </label>
-                  <div className="relative">
-                    <textarea
-                      name="message"
-                      value={formData.message}
-                      onChange={handleInputChange}
-                      rows="6"
-                      required
-                      onFocus={() => setFocusedField('message')}
-                      onBlur={() => setFocusedField(null)}
-                      className="w-full px-4 py-4 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 backdrop-blur-sm resize-none"
-                      placeholder="Ceritakan tentang proyek atau ide Anda..."
-                    ></textarea>
-                    <div className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-300 ${focusedField === 'message' ? 'w-full' : 'w-0'}`}></div>
-                  </div>
+                  <textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    onFocus={() => setFocusedField("message")}
+                    onBlur={() => setFocusedField(null)}
+                    placeholder="Ceritakan tentang proyek atau ide Anda..."
+                    rows={5}
+                    required
+                    style={inputStyle("message")}
+                  />
                 </div>
-              </div>
 
-              {/* Submit Button */}
-              <button
-                onClick={handleSubmit}
-                disabled={isSubmitting}
-                className="group relative w-full py-4 px-6 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold transition-all duration-300 hover:from-purple-700 hover:to-pink-700 hover:scale-105 hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="relative flex items-center justify-center">
-                  {isSubmitting ? (
+                {/* Submit */}
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 8,
+                    padding: "12px 0",
+                    borderRadius: 10,
+                    background: submitted
+                      ? "linear-gradient(135deg, #34d399, #059669)"
+                      : "linear-gradient(135deg, #2dd4bf, #059669)",
+                    color: "#0d0d0f",
+                    fontWeight: 700,
+                    fontSize: "0.9rem",
+                    letterSpacing: "0.02em",
+                    border: "none",
+                    cursor: isSubmitting ? "not-allowed" : "pointer",
+                    opacity: isSubmitting ? 0.7 : 1,
+                    transition: "all 0.3s ease",
+                    boxShadow: "0 6px 20px rgba(45,212,191,0.25)",
+                    fontFamily: "'Inter', sans-serif",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isSubmitting)
+                      e.currentTarget.style.boxShadow =
+                        "0 10px 28px rgba(45,212,191,0.4)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow =
+                      "0 6px 20px rgba(45,212,191,0.25)";
+                  }}
+                >
+                  {submitted ? (
                     <>
-                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-3"></div>
-                      Mengirim Pesan...
+                      <FaCheckCircle size={15} />
+                      Pesan Terkirim!
+                    </>
+                  ) : isSubmitting ? (
+                    <>
+                      <div
+                        style={{
+                          width: 15,
+                          height: 15,
+                          border: "2px solid rgba(13,13,15,0.3)",
+                          borderTopColor: "#0d0d0f",
+                          borderRadius: "50%",
+                          animation: "spin-btn 0.7s linear infinite",
+                        }}
+                      />
+                      Mengirim...
                     </>
                   ) : (
                     <>
-                      <Send className="w-5 h-5 mr-3 group-hover:translate-x-1 transition-transform duration-300" />
+                      <FaPaperPlane size={14} />
                       Kirim Pesan
                     </>
                   )}
-                </div>
-              </button>
-            </div>
+                </button>
+                <style>{`@keyframes spin-btn { to { transform: rotate(360deg); } }`}</style>
+              </div>
+            </form>
           </div>
 
-          {/* Contact Info */}
-          <div className="space-y-8">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl blur-xl"></div>
-              <div className="relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-8">
-                <h3 className="text-2xl font-bold text-white mb-6">Informasi Kontak</h3>
-                
-                <div className="space-y-6">
-                  <div className="flex items-center group cursor-pointer">
-                    <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
-                      <Mail className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-white/60 text-sm mb-1">Email</p>
-                      <a 
-                        href="mailto:akbarfajar2112@gmail.com" 
-                        className="text-white font-medium hover:text-purple-300 transition-colors duration-300"
-                      >
-                        akbarfajar2112@gmail.com
-                      </a>
-                    </div>
-                  </div>
+          {/* ════ RIGHT — Info ════ */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            {/* Email card */}
+            <div
+              style={{
+                borderRadius: 14,
+                background: "rgba(255,255,255,0.025)",
+                border: "1px solid rgba(255,255,255,0.07)",
+                padding: "22px",
+              }}
+            >
+              <div
+                style={{
+                  height: 2,
+                  borderRadius: 2,
+                  background: "linear-gradient(90deg, #2dd4bf, transparent)",
+                  marginBottom: 18,
+                }}
+              />
+
+              <p
+                style={{
+                  margin: "0 0 6px",
+                  fontSize: 11,
+                  color: "#334155",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.08em",
+                  fontWeight: 600,
+                }}
+              >
+                Email
+              </p>
+              <a
+                href="mailto:akbarfajar2112@gmail.com"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  color: "#cbd5e1",
+                  textDecoration: "none",
+                  fontSize: "0.88rem",
+                  fontWeight: 500,
+                  transition: "color 0.2s",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "#2dd4bf")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "#cbd5e1")}
+              >
+                <div
+                  style={{
+                    width: 34,
+                    height: 34,
+                    borderRadius: 9,
+                    background: "rgba(45,212,191,0.1)",
+                    border: "1px solid rgba(45,212,191,0.2)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                  }}
+                >
+                  <FaEnvelope size={14} style={{ color: "#2dd4bf" }} />
+                </div>
+                akbarfajar2112@gmail.com
+              </a>
+            </div>
+
+            {/* Status card */}
+            <div
+              style={{
+                borderRadius: 14,
+                background: "rgba(52,211,153,0.04)",
+                border: "1px solid rgba(52,211,153,0.14)",
+                padding: "18px 22px",
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+              }}
+            >
+              <span
+                style={{
+                  width: 9,
+                  height: 9,
+                  borderRadius: "50%",
+                  background: "#34d399",
+                  boxShadow: "0 0 8px rgba(52,211,153,0.8)",
+                  flexShrink: 0,
+                  animation: "pulse-status 2s ease infinite",
+                }}
+              />
+              <style>{`@keyframes pulse-status { 0%,100%{opacity:1} 50%{opacity:0.5} }`}</style>
+              <div>
+                <div
+                  style={{
+                    fontSize: "0.84rem",
+                    fontWeight: 600,
+                    color: "#34d399",
+                  }}
+                >
+                  Online & Siap Membantu
+                </div>
+                <div style={{ fontSize: 12, color: "#334155", marginTop: 2 }}>
+                  Respon dalam 24 jam
                 </div>
               </div>
             </div>
 
-            {/* Call to Action */}
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-pink-500/20 to-purple-500/20 rounded-2xl blur-xl"></div>
-              <div className="relative bg-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-8 text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <MessageCircle className="w-8 h-8 text-white" />
-                </div>
-                <h4 className="text-xl font-bold text-white mb-3">Siap untuk Memulai?</h4>
-                <p className="text-white/70 mb-6">
-                  Respon cepat dalam 24 jam. Mari diskusikan proyek Anda dan ciptakan sesuatu yang menakjubkan!
-                </p>
-                <div className="flex items-center justify-center space-x-2 text-purple-300">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-sm font-medium">Online & Siap Membantu</span>
-                </div>
+            {/* Social links */}
+            <div
+              style={{
+                borderRadius: 14,
+                background: "rgba(255,255,255,0.025)",
+                border: "1px solid rgba(255,255,255,0.07)",
+                padding: "20px 22px",
+              }}
+            >
+              <p
+                style={{
+                  margin: "0 0 14px",
+                  fontSize: 11,
+                  color: "#334155",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.08em",
+                  fontWeight: 600,
+                }}
+              >
+                Social Media
+              </p>
+              <div
+                style={{ display: "flex", flexDirection: "column", gap: 10 }}
+              >
+                {socialLinks.map((s, i) => (
+                  <a
+                    key={i}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 12,
+                      padding: "9px 12px",
+                      borderRadius: 9,
+                      background: "rgba(255,255,255,0.02)",
+                      border: "1px solid rgba(255,255,255,0.06)",
+                      textDecoration: "none",
+                      color: "#64748b",
+                      fontSize: "0.84rem",
+                      fontWeight: 500,
+                      transition: "all 0.25s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = s.accent;
+                      e.currentTarget.style.borderColor = `${s.accent}40`;
+                      e.currentTarget.style.background = `${s.accent}08`;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = "#64748b";
+                      e.currentTarget.style.borderColor =
+                        "rgba(255,255,255,0.06)";
+                      e.currentTarget.style.background =
+                        "rgba(255,255,255,0.02)";
+                    }}
+                  >
+                    <span style={{ color: s.accent }}>{s.icon}</span>
+                    {s.label}
+                  </a>
+                ))}
               </div>
             </div>
           </div>
         </div>
+
+        {/* Responsive grid */}
+        <style>{`
+          @media (max-width: 768px) {
+            .contact-grid {
+              grid-template-columns: 1fr !important;
+            }
+          }
+        `}</style>
       </div>
     </section>
   );

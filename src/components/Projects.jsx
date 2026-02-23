@@ -1,390 +1,637 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { FaGithub, FaExternalLinkAlt, FaStar } from "react-icons/fa";
 
+// ── Data ─────────────────────────────────────────────────────────────────────
 const projects = [
   {
-    title: "CoffeeShopMe (E-Commerce)",
+    title: "Website UKM Teater UI",
     description:
-      "Website toko kopi dengan fitur cart, checkout, dan realtime sync menggunakan React, Zustand, dan Supabase.",
+      "Website resmi UKM Teater Universitas Indonesia dengan informasi kegiatan, galeri, dan profil organisasi.",
+    tech: ["React", "Tailwind", "Supabase"],
+    image: "/TeaterUI.png",
+    demo: "https://ukmteaterui.com/",
+    code: null,
+    category: "Organization",
+    featured: true,
+  },
+  {
+    title: "Organizo Task Manager",
+    description:
+      "Aplikasi manajemen tugas modern dengan fitur task tracking, prioritas, dan tampilan yang intuitif.",
+    tech: ["React", "Tailwind", "Supabase"],
+    image: "/Organizo.jpg",
+    demo: "https://organizo-taskmanager.vercel.app/",
+    code: "https://github.com/akbarfajar21/Organizo-TaskManager",
+    category: "Productivity",
+    featured: true,
+  },
+  {
+    title: "CoffeeShopMe",
+    description:
+      "Toko kopi dengan fitur cart, checkout, dan realtime sync menggunakan Zustand & Supabase.",
     tech: ["React", "Tailwind", "Supabase", "Zustand"],
     image: "/coffeeshopme.png",
     demo: "https://coffeeshopme.com",
     code: "https://github.com/akbarfajar/coffeeshopme",
     category: "E-Commerce",
-    featured: true,
+    featured: false,
   },
   {
     title: "Image Generator Web",
     description:
-      "Website AI image generator berbasis prompt. Dibuat menggunakan React dan API image gen.",
+      "AI image generator berbasis prompt menggunakan React dan API image generation.",
     tech: ["React", "Tailwind"],
     image: "/generator-image-web.png",
     demo: "https://generator-image-web.vercel.app",
-    code: "#",
+    code: null,
     category: "AI & ML",
     featured: false,
   },
   {
     title: "Toko Online",
     description:
-      "Website toko online sederhana dengan katalog produk dan tampilan bersih.",
+      "Website toko online sederhana dengan katalog produk dan tampilan yang bersih.",
     tech: ["React", "Tailwind"],
     image: "/project-toko-online.png",
     demo: "https://project-toko-online.vercel.app",
-    code: "#",
+    code: null,
     category: "E-Commerce",
     featured: false,
   },
   {
     title: "Website Hadist",
     description:
-      "Website pencarian dan tampilan Hadist menggunakan API hadist. UI simpel dan fokus.",
+      "Pencarian dan tampilan Hadist menggunakan API hadist dengan UI simpel dan fokus.",
     tech: ["React", "Tailwind", "API"],
     image: "/project-hadist.png",
     demo: "https://project-hadist.vercel.app",
-    code: "#",
+    code: null,
     category: "Education",
     featured: false,
   },
   {
     title: "WebsiteFoods",
     description:
-      "Website katalog makanan dengan animasi menarik dan tampilan responsive.",
+      "Katalog makanan dengan animasi menarik dan tampilan responsif yang modern.",
     tech: ["React", "Tailwind"],
     image: "/websitefoods.png",
     demo: "https://websitefoods.vercel.app",
-    code: "#",
+    code: null,
     category: "Food & Beverage",
     featured: false,
   },
   {
-    title: "Website Sekolah SMA IT Baitul 'Ilmi",
+    title: "SMA IT Baitul 'Ilmi",
     description:
-      "Website profil sekolah modern dengan hero, gallery, contact, dan fitur navigasi dinamis.",
+      "Website profil sekolah dengan hero, gallery, contact, dan navigasi dinamis.",
     tech: ["React", "Tailwind"],
     image: "/smaitbaitulilmi.png",
     demo: "https://smaitbaitulilmi.vercel.app",
-    code: "#",
+    code: null,
     category: "Education",
-    featured: true,
+    featured: false,
   },
 ];
 
-const experiences = [
-  {
-    title: "Ketua OSIS UNISCO",
-    date: "Jun 2024 - Mar 2025",
-    description:
-      "Memimpin organisasi OSIS UNISCO, mengkoordinasi kegiatan siswa, menyelenggarakan event internal-eksternal, serta menjadi penghubung strategis antara pihak sekolah dan siswa.",
-  },
-  {
-    title: "Guru IT – SMP Istiqlal Tambun",
-    date: "Mar 2024",
-    description:
-      "Menjadi pengajar praktik untuk mata pelajaran Teknologi Informasi. Memberikan materi dasar-dasar komputer dan pengembangan web kepada siswa dengan pendekatan interaktif dan praktis.",
-  },
-  {
-    title: "Magang IT Support – PT Kereta Api Indonesia (Divisi LRT Jabodebek)",
-    date: "Jan 2024 - Feb 2024",
-    description:
-      "Bertugas sebagai staf IT Support, membantu pengelolaan perangkat keras dan lunak, instalasi sistem, troubleshooting jaringan, serta dokumentasi IT di lingkungan operasional LRT Jabodebek.",
-  },
-];
+// Category accent colors
+const catColor = {
+  Productivity: "#a78bfa",
+  Organization: "#2dd4bf",
+  "E-Commerce": "#34d399",
+  "AI & ML": "#f472b6",
+  Education: "#fbbf24",
+  "Food & Beverage": "#fb923c",
+};
 
-const Projects = () => {
-  const [activeFilter, setActiveFilter] = useState("All");
-  const [hoveredProject, setHoveredProject] = useState(null);
-  const [isVisible, setIsVisible] = useState(false);
+// ── Project Card ─────────────────────────────────────────────────────────────
+const ProjectCard = ({ project, index }) => {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const accent = catColor[project.category] || "#2dd4bf";
 
   useEffect(() => {
-    setIsVisible(true);
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) setVisible(true);
+      },
+      { threshold: 0.1 },
+    );
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        borderRadius: 14,
+        overflow: "hidden",
+        background: hovered
+          ? "rgba(255,255,255,0.04)"
+          : "rgba(255,255,255,0.025)",
+        border: `1px solid ${hovered ? `${accent}40` : "rgba(255,255,255,0.07)"}`,
+        boxShadow: hovered
+          ? `0 16px 36px rgba(0,0,0,0.4), 0 0 0 1px ${accent}20`
+          : "none",
+        transform: visible
+          ? hovered
+            ? "translateY(-5px)"
+            : "translateY(0)"
+          : "translateY(22px)",
+        opacity: visible ? 1 : 0,
+        transition: `transform 0.55s ease ${index * 70}ms, opacity 0.55s ease ${index * 70}ms, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease`,
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      {/* Image */}
+      <div
+        style={{
+          position: "relative",
+          height: 180,
+          overflow: "hidden",
+          flexShrink: 0,
+        }}
+      >
+        <img
+          src={project.image}
+          alt={project.title}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            transition: "transform 0.6s ease",
+            transform: hovered ? "scale(1.06)" : "scale(1)",
+            filter: hovered ? "brightness(0.85)" : "brightness(0.75)",
+          }}
+        />
+        {/* Gradient overlay */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(to top, rgba(13,13,15,0.85) 0%, transparent 60%)",
+          }}
+        />
+
+        {/* Top row: category badge + featured star */}
+        <div
+          style={{
+            position: "absolute",
+            top: 10,
+            left: 10,
+            right: 10,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <span
+            style={{
+              fontSize: 11,
+              fontWeight: 700,
+              color: accent,
+              background: `${accent}18`,
+              border: `1px solid ${accent}35`,
+              padding: "3px 9px",
+              borderRadius: 99,
+              backdropFilter: "blur(8px)",
+              letterSpacing: "0.04em",
+            }}
+          >
+            {project.category}
+          </span>
+          {project.featured && (
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 4,
+                fontSize: 11,
+                fontWeight: 700,
+                color: "#fbbf24",
+                background: "rgba(251,191,36,0.12)",
+                border: "1px solid rgba(251,191,36,0.3)",
+                padding: "3px 9px",
+                borderRadius: 99,
+                backdropFilter: "blur(8px)",
+              }}
+            >
+              <FaStar size={9} /> Featured
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Content */}
+      <div
+        style={{
+          padding: "16px 18px 18px",
+          display: "flex",
+          flexDirection: "column",
+          flex: 1,
+        }}
+      >
+        <h3
+          style={{
+            margin: "0 0 6px",
+            fontSize: "0.97rem",
+            fontWeight: 700,
+            color: hovered ? "#f1f5f9" : "#cbd5e1",
+            transition: "color 0.25s",
+            letterSpacing: "-0.01em",
+            lineHeight: 1.3,
+          }}
+        >
+          {project.title}
+        </h3>
+
+        <p
+          style={{
+            margin: "0 0 12px",
+            fontSize: "0.8rem",
+            color: "#475569",
+            lineHeight: 1.65,
+            flex: 1,
+          }}
+        >
+          {project.description}
+        </p>
+
+        {/* Tech stack */}
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 6,
+            marginBottom: 14,
+          }}
+        >
+          {project.tech.map((t, i) => (
+            <span
+              key={i}
+              style={{
+                fontSize: 11,
+                fontWeight: 600,
+                color: "#64748b",
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                padding: "2px 8px",
+                borderRadius: 5,
+              }}
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+
+        {/* Action buttons */}
+        <div style={{ display: "flex", gap: 8 }}>
+          <a
+            href={project.demo}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              flex: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 6,
+              padding: "8px 0",
+              borderRadius: 8,
+              background: `linear-gradient(135deg, ${accent}dd, ${accent}99)`,
+              color: "#0d0d0f",
+              fontSize: "0.78rem",
+              fontWeight: 700,
+              textDecoration: "none",
+              transition: "filter 0.2s, transform 0.2s",
+              letterSpacing: "0.02em",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.filter = "brightness(1.1)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.filter = "brightness(1)")
+            }
+          >
+            <FaExternalLinkAlt size={11} />
+            Live Demo
+          </a>
+
+          {project.code && (
+            <a
+              href={project.code}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 6,
+                padding: "8px 14px",
+                borderRadius: 8,
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                color: "#94a3b8",
+                fontSize: "0.78rem",
+                fontWeight: 600,
+                textDecoration: "none",
+                transition: "border-color 0.2s, color 0.2s",
+                whiteSpace: "nowrap",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = `${accent}55`;
+                e.currentTarget.style.color = accent;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
+                e.currentTarget.style.color = "#94a3b8";
+              }}
+            >
+              <FaGithub size={13} />
+              Code
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ── Main component ────────────────────────────────────────────────────────────
+const Projects = () => {
+  const [activeFilter, setActiveFilter] = useState("All");
+  const headerRef = useRef(null);
+  const [headerVisible, setHeaderVisible] = useState(false);
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) setHeaderVisible(true);
+      },
+      { threshold: 0.2 },
+    );
+    if (headerRef.current) obs.observe(headerRef.current);
+    return () => obs.disconnect();
   }, []);
 
   const categories = ["All", ...new Set(projects.map((p) => p.category))];
-
-  const filteredProjects =
+  const filtered =
     activeFilter === "All"
       ? projects
       : projects.filter((p) => p.category === activeFilter);
 
-  const featuredProjects = projects.filter((p) => p.featured);
-  const regularProjects = projects.filter((p) => !p.featured);
-
   return (
-    <section id="projects" className="relative py-32 overflow-hidden">
-      {/* Sophisticated Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950"></div>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(120,119,198,0.15),transparent_50%)]"></div>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(59,130,246,0.1),transparent_50%)]"></div>
+    <section
+      id="projects"
+      style={{
+        background: "#0d0d0f",
+        padding: "100px 0 80px",
+        fontFamily: "'Inter', sans-serif",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        @keyframes proj-fade-up {
+          from { opacity:0; transform:translateY(24px); }
+          to   { opacity:1; transform:translateY(0); }
+        }
+        .proj-fade-up { animation: proj-fade-up 0.7s ease forwards; }
+        .filter-pill  { cursor: pointer; transition: all 0.25s ease; border: none; }
+        .filter-pill:hover { transform: translateY(-1px); }
+      `}</style>
 
-      {/* Animated Grid Pattern */}
-      <div className="absolute inset-0 opacity-10">
+      {/* Ambient glows */}
+      <div
+        style={{
+          position: "absolute",
+          top: "-5%",
+          right: "15%",
+          width: 340,
+          height: 340,
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(45,212,191,0.05) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          bottom: "5%",
+          left: "5%",
+          width: 260,
+          height: 260,
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(251,191,36,0.04) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }}
+      />
+
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px" }}>
+        {/* ── Header ── */}
         <div
-          className="absolute inset-0"
+          ref={headerRef}
+          className={headerVisible ? "proj-fade-up" : ""}
           style={{
-            backgroundImage: `
-            linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)
-          `,
-            backgroundSize: "50px 50px",
+            opacity: headerVisible ? 1 : 0,
+            textAlign: "center",
+            marginBottom: 48,
           }}
-        ></div>
-      </div>
-
-      <div className="relative max-w-7xl mx-auto px-6">
-        {/* Premium Header */}
-        <div
-          className={`text-center mb-20 transform transition-all duration-1000 ${
-            isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
-          }`}
         >
-          <div className="inline-block mb-6">
-            <span className="text-xs font-bold tracking-[0.2em] text-blue-400 uppercase bg-blue-400/10 px-4 py-2 rounded-full border border-blue-400/20">
-              Portfolio Showcase
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "5px 14px",
+              borderRadius: 999,
+              marginBottom: 18,
+              background: "rgba(45,212,191,0.07)",
+              border: "1px solid rgba(45,212,191,0.18)",
+            }}
+          >
+            <span
+              style={{
+                fontSize: 13,
+                color: "#2dd4bf",
+                fontWeight: 600,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+              }}
+            >
+              Portfolio
             </span>
           </div>
 
-          <h2 className="text-7xl md:text-8xl font-black mb-6 relative">
-            <span className="bg-gradient-to-r from-white via-blue-200 to-indigo-300 bg-clip-text text-transparent">
-              Exclusive
+          <h2
+            style={{
+              margin: "0 0 14px",
+              fontSize: "clamp(2rem, 4vw, 2.8rem)",
+              fontWeight: 900,
+              color: "#f1f5f9",
+              letterSpacing: "-0.03em",
+              lineHeight: 1.1,
+            }}
+          >
+            Proyek &{" "}
+            <span
+              style={{
+                background:
+                  "linear-gradient(135deg, #2dd4bf 0%, #34d399 50%, #fbbf24 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              Karya
             </span>
-            <br />
-            <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
-              Projects
-            </span>
-            {/* Glowing Effect */}
-            <div className="absolute -inset-2 bg-gradient-to-r from-blue-600/20 to-purple-600/20 blur-3xl -z-10 animate-pulse"></div>
           </h2>
 
-          <p className="text-slate-300 text-xl max-w-3xl mx-auto leading-relaxed">
-            Karya eksklusif dalam pengembangan web modern dengan teknologi
-            terdepan
+          <p
+            style={{
+              margin: "0 auto",
+              maxWidth: 440,
+              fontSize: "0.95rem",
+              color: "#475569",
+              lineHeight: 1.75,
+            }}
+          >
+            Koleksi proyek yang saya bangun menggunakan teknologi modern.
           </p>
 
-          {/* Decorative Line */}
-          <div className="mt-10 flex justify-center">
-            <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent"></div>
+          {/* Divider */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 14,
+              marginTop: 24,
+            }}
+          >
+            <div
+              style={{
+                height: 1,
+                width: 60,
+                background:
+                  "linear-gradient(90deg, transparent, rgba(45,212,191,0.3))",
+              }}
+            />
+            <div
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: "#2dd4bf",
+                boxShadow: "0 0 8px rgba(45,212,191,0.7)",
+              }}
+            />
+            <div
+              style={{
+                height: 1,
+                width: 60,
+                background:
+                  "linear-gradient(90deg, rgba(45,212,191,0.3), transparent)",
+              }}
+            />
           </div>
         </div>
 
-        {/* Premium Filter Pills */}
+        {/* ── Filter pills ── */}
         <div
-          className={`flex flex-wrap justify-center gap-3 mb-16 transform transition-all duration-1000 delay-300 ${
-            isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
-          }`}
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: 8,
+            marginBottom: 40,
+            opacity: headerVisible ? 1 : 0,
+            transform: headerVisible ? "translateY(0)" : "translateY(12px)",
+            transition: "all 0.6s ease 0.2s",
+          }}
         >
-          {categories.map((category, index) => (
-            <button
-              key={index}
-              onClick={() => setActiveFilter(category)}
-              className={`px-6 py-3 rounded-full font-semibold text-sm transition-all duration-500 transform hover:scale-105 relative overflow-hidden group ${
-                activeFilter === category
-                  ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
-                  : "bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white border border-white/10"
-              }`}
-            >
-              <span className="relative z-10">{category}</span>
-              {activeFilter !== category && (
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-indigo-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              )}
-            </button>
+          {categories.map((cat, i) => {
+            const isActive = activeFilter === cat;
+            const accent = catColor[cat] || "#2dd4bf";
+            return (
+              <button
+                key={i}
+                onClick={() => setActiveFilter(cat)}
+                className="filter-pill"
+                style={{
+                  padding: "6px 16px",
+                  borderRadius: 99,
+                  fontSize: "0.8rem",
+                  fontWeight: 600,
+                  letterSpacing: "0.02em",
+                  color: isActive ? "#0d0d0f" : "#64748b",
+                  background: isActive
+                    ? `linear-gradient(135deg, ${accent}, ${accent}99)`
+                    : "rgba(255,255,255,0.04)",
+                  border: isActive
+                    ? "none"
+                    : "1px solid rgba(255,255,255,0.08)",
+                  boxShadow: isActive ? `0 4px 16px ${accent}40` : "none",
+                }}
+              >
+                {cat}
+                {cat !== "All" && (
+                  <span
+                    style={{
+                      marginLeft: 6,
+                      fontSize: 10,
+                      fontWeight: 700,
+                      color: isActive ? "rgba(13,13,15,0.7)" : "#334155",
+                    }}
+                  >
+                    {projects.filter((p) => p.category === cat).length}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* ── Project grid ── */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+            gap: 16,
+          }}
+        >
+          {filtered.map((project, i) => (
+            <ProjectCard key={project.title} project={project} index={i} />
           ))}
         </div>
 
-        {/* Featured Projects - Special Layout */}
-        {activeFilter === "All" && (
-          <div
-            className={`mb-20 transform transition-all duration-1000 delay-500 ${
-              isVisible
-                ? "translate-y-0 opacity-100"
-                : "translate-y-10 opacity-0"
-            }`}
-          >
-            <h3 className="text-3xl font-bold text-white mb-10 text-center">
-              <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
-                Featured Projects
-              </span>
-            </h3>
-
-            <div className="grid gap-8 lg:grid-cols-2">
-              {featuredProjects.map((project, index) => (
-                <div
-                  key={index}
-                  onMouseEnter={() => setHoveredProject(`featured-${index}`)}
-                  onMouseLeave={() => setHoveredProject(null)}
-                  className="group relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-3xl overflow-hidden border border-white/20 hover:border-white/40 transition-all duration-700 hover:scale-[1.02] transform-gpu"
-                >
-                  {/* Premium Badge */}
-                  <div className="absolute top-4 right-4 z-20 bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-xs font-bold px-3 py-1 rounded-full">
-                    FEATURED
-                  </div>
-
-                  <div className="relative h-80 overflow-hidden">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-
-                    {/* Hover Overlay */}
-                    <div
-                      className={`absolute inset-0 bg-gradient-to-t from-blue-900/80 to-transparent transition-opacity duration-500 ${
-                        hoveredProject === `featured-${index}`
-                          ? "opacity-100"
-                          : "opacity-0"
-                      }`}
-                    ></div>
-                  </div>
-
-                  <div className="p-8">
-                    <div className="mb-3">
-                      <span className="text-xs text-blue-400 font-semibold tracking-wide">
-                        {project.category}
-                      </span>
-                    </div>
-
-                    <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-blue-300 transition-colors duration-300">
-                      {project.title}
-                    </h3>
-
-                    <p className="text-slate-300 leading-relaxed mb-6">
-                      {project.description}
-                    </p>
-
-                    <div className="flex flex-wrap gap-2 mb-8">
-                      {project.tech.map((tech, i) => (
-                        <span
-                          key={i}
-                          className="text-xs bg-white/10 text-blue-300 font-medium px-3 py-2 rounded-lg border border-white/20 backdrop-blur-sm"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-
-                    <div className="flex gap-4">
-                      <a
-                        href={project.demo}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 text-center bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-4 rounded-xl font-semibold hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/25"
-                      >
-                        View Live
-                      </a>
-                      {project.code !== "#" && (
-                        <a
-                          href={project.code}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex-1 text-center border-2 border-white/30 text-white py-4 rounded-xl font-semibold hover:border-blue-400 hover:bg-blue-400/10 transition-all duration-300 transform hover:scale-105"
-                        >
-                          Source Code
-                        </a>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Glow Effect on Hover */}
-                  <div
-                    className={`absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-3xl blur opacity-10 transition-opacity duration-500 -z-10 ${
-                      hoveredProject === `featured-${index}`
-                        ? "opacity-30"
-                        : "opacity-0"
-                    }`}
-                  ></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Regular Projects Grid */}
+        {/* ── Footer count ── */}
         <div
-          className={`transform transition-all duration-1000 delay-700 ${
-            isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
-          }`}
+          style={{
+            textAlign: "center",
+            marginTop: 40,
+            fontSize: "0.82rem",
+            color: "#334155",
+            fontWeight: 500,
+          }}
         >
-          {activeFilter === "All" && (
-            <h3 className="text-3xl font-bold text-white mb-10 text-center">
-              All Projects
-            </h3>
-          )}
-
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {(activeFilter === "All" ? regularProjects : filteredProjects).map(
-              (project, index) => (
-                <div
-                  key={index}
-                  onMouseEnter={() => setHoveredProject(index)}
-                  onMouseLeave={() => setHoveredProject(null)}
-                  className="group relative bg-gradient-to-br from-white/5 to-white/2 backdrop-blur-xl rounded-2xl overflow-hidden border border-white/10 hover:border-white/30 transition-all duration-500 hover:scale-105 transform-gpu"
-                >
-                  <div className="relative h-56 overflow-hidden">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-
-                    {/* Category Badge */}
-                    <div className="absolute top-3 left-3 bg-black/50 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full">
-                      {project.category}
-                    </div>
-                  </div>
-
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-300 transition-colors duration-300">
-                      {project.title}
-                    </h3>
-
-                    <p className="text-slate-400 text-sm leading-relaxed mb-4">
-                      {project.description}
-                    </p>
-
-                    <div className="flex flex-wrap gap-1.5 mb-6">
-                      {project.tech.map((tech, i) => (
-                        <span
-                          key={i}
-                          className="text-xs bg-white/5 text-blue-300 font-medium px-2.5 py-1 rounded-md border border-white/10"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-
-                    <div className="flex gap-3">
-                      <a
-                        href={project.demo}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 text-center text-sm bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 shadow-lg shadow-blue-500/20"
-                      >
-                        Live Demo
-                      </a>
-                      {project.code !== "#" && (
-                        <a
-                          href={project.code}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex-1 text-center text-sm border border-white/20 text-slate-300 py-3 rounded-lg font-semibold hover:border-blue-400 hover:text-blue-400 hover:bg-blue-400/5 transition-all duration-300"
-                        >
-                          Code
-                        </a>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Subtle Glow Effect */}
-                  <div
-                    className={`absolute -inset-0.5 bg-gradient-to-r from-blue-500/20 to-indigo-600/20 rounded-2xl blur transition-opacity duration-500 -z-10 ${
-                      hoveredProject === index ? "opacity-100" : "opacity-0"
-                    }`}
-                  ></div>
-                </div>
-              )
-            )}
-          </div>
+          Menampilkan{" "}
+          <span style={{ color: "#2dd4bf", fontWeight: 700 }}>
+            {filtered.length}
+          </span>{" "}
+          dari{" "}
+          <span style={{ color: "#2dd4bf", fontWeight: 700 }}>
+            {projects.length}
+          </span>{" "}
+          proyek
         </div>
       </div>
     </section>
