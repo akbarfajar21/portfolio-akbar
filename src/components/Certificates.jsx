@@ -149,21 +149,22 @@ const CertCard = ({ cert, index }) => {
         borderRadius: 13,
         overflow: "hidden",
         background: hovered
-          ? "rgba(255,255,255,0.045)"
-          : "rgba(255,255,255,0.025)",
-        border: `1px solid ${hovered ? `${accent}45` : "rgba(255,255,255,0.07)"}`,
+          ? "rgba(255,255,255,0.05)"
+          : "rgba(255,255,255,0.03)",
+        border: `1px solid ${hovered ? `${accent}50` : "rgba(255,255,255,0.08)"}`,
         boxShadow: hovered
-          ? `0 16px 36px rgba(0,0,0,0.4), 0 0 0 1px ${accent}20`
+          ? `0 20px 40px rgba(0,0,0,0.45), 0 0 0 1px ${accent}25`
           : "none",
         transform: visible
           ? hovered
-            ? "translateY(-5px)"
+            ? "translateY(-6px)"
             : "translateY(0)"
-          : "translateY(22px)",
+          : "translateY(24px)",
         opacity: visible ? 1 : 0,
-        transition: `transform 0.55s ease ${index * 55}ms, opacity 0.55s ease ${index * 55}ms, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease`,
+        transition: `all 0.4s cubic-bezier(0.4, 0, 0.2, 1)`,
         textDecoration: "none",
         cursor: "pointer",
+        backdropFilter: "blur(10px)",
       }}
     >
       {/* Image */}
@@ -412,7 +413,7 @@ const Certificates = () => {
           from { opacity:0; transform:translateY(24px); }
           to   { opacity:1; transform:translateY(0); }
         }
-        .cert-fade-up { animation: cert-fade-up 0.7s ease forwards; }
+        .cert-fade-up { animation: cert-fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .cert-filter  { cursor: pointer; transition: all 0.25s ease; border: none; }
         .cert-filter:hover { transform: translateY(-1px); }
       `}</style>
@@ -605,7 +606,7 @@ const Certificates = () => {
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
-            gap: 14,
+            gap: 16,
             marginBottom: 48,
           }}
         >

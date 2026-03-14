@@ -161,20 +161,21 @@ const SkillCard = ({ skill, accent, index }) => {
         borderRadius: 14,
         padding: "20px 22px",
         background: hovered
-          ? "rgba(255,255,255,0.04)"
-          : "rgba(255,255,255,0.025)",
-        border: `1px solid ${hovered ? `${accent}44` : "rgba(255,255,255,0.06)"}`,
+          ? "rgba(255,255,255,0.05)"
+          : "rgba(255,255,255,0.03)",
+        border: `1px solid ${hovered ? `${accent}50` : "rgba(255,255,255,0.08)"}`,
         boxShadow: hovered
-          ? `0 12px 32px rgba(0,0,0,0.35), 0 0 0 1px ${accent}22`
+          ? `0 16px 36px rgba(0,0,0,0.4), 0 0 0 1px ${accent}25`
           : "none",
         transform: visible
           ? hovered
-            ? "translateY(-4px)"
+            ? "translateY(-5px)"
             : "translateY(0)"
-          : "translateY(20px)",
+          : "translateY(22px)",
         opacity: visible ? 1 : 0,
-        transition: `transform 0.5s ease ${index * 60}ms, opacity 0.5s ease ${index * 60}ms, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease`,
+        transition: `all 0.4s cubic-bezier(0.4, 0, 0.2, 1)`,
         cursor: "default",
+        backdropFilter: "blur(10px)",
       }}
     >
       {/* Icon + name row */}
@@ -280,7 +281,7 @@ const Skills = () => {
           from { opacity:0; transform:translateY(28px); }
           to   { opacity:1; transform:translateY(0); }
         }
-        .skills-fade-up { animation: skills-fade-up 0.7s ease forwards; }
+        .skills-fade-up { animation: skills-fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
       `}</style>
 
       {/* Background ambient glows */}
@@ -483,7 +484,7 @@ const Skills = () => {
                 style={{
                   display: "grid",
                   gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-                  gap: 14,
+                  gap: 16,
                 }}
               >
                 {catSkills.map((skill, i) => (

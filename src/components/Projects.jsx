@@ -4,6 +4,17 @@ import { FaGithub, FaExternalLinkAlt, FaStar } from "react-icons/fa";
 // ── Data ─────────────────────────────────────────────────────────────────────
 const projects = [
   {
+    title: "Website Yayasan Setinggi Langit",
+    description:
+      "Platform donasi digital dan transparansi kegiatan sosial untuk yayasan kemanusiaan (fokus pada yatim & dhuafa).",
+    tech: ["React.js", "Tailwind CSS", "Supabase", "Mayar"],
+    image: "/setinggilangit.png",
+    demo: "https://setinggilangit.org/",
+    code: null,
+    category: "Social Impact",
+    featured: true,
+  },
+  {
     title: "Website UKM Teater UI",
     description:
       "Website resmi UKM Teater Universitas Indonesia dengan informasi kegiatan, galeri, dan profil organisasi.",
@@ -101,6 +112,7 @@ const catColor = {
   "AI & ML": "#f472b6",
   Education: "#fbbf24",
   "Food & Beverage": "#fb923c",
+  "Social Impact": "#38bdf8",
 };
 
 // ── Project Card ─────────────────────────────────────────────────────────────
@@ -130,21 +142,22 @@ const ProjectCard = ({ project, index }) => {
         borderRadius: 14,
         overflow: "hidden",
         background: hovered
-          ? "rgba(255,255,255,0.04)"
-          : "rgba(255,255,255,0.025)",
-        border: `1px solid ${hovered ? `${accent}40` : "rgba(255,255,255,0.07)"}`,
+          ? "rgba(255,255,255,0.05)"
+          : "rgba(255,255,255,0.03)",
+        border: `1px solid ${hovered ? `${accent}50` : "rgba(255,255,255,0.08)"}`,
         boxShadow: hovered
-          ? `0 16px 36px rgba(0,0,0,0.4), 0 0 0 1px ${accent}20`
+          ? `0 20px 40px rgba(0,0,0,0.45), 0 0 0 1px ${accent}25`
           : "none",
         transform: visible
           ? hovered
-            ? "translateY(-5px)"
+            ? "translateY(-6px)"
             : "translateY(0)"
-          : "translateY(22px)",
+          : "translateY(24px)",
         opacity: visible ? 1 : 0,
-        transition: `transform 0.55s ease ${index * 70}ms, opacity 0.55s ease ${index * 70}ms, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease`,
+        transition: `all 0.4s cubic-bezier(0.4, 0, 0.2, 1)`,
         display: "flex",
         flexDirection: "column",
+        backdropFilter: "blur(10px)",
       }}
     >
       {/* Image */}
@@ -402,9 +415,10 @@ const Projects = () => {
           from { opacity:0; transform:translateY(24px); }
           to   { opacity:1; transform:translateY(0); }
         }
-        .proj-fade-up { animation: proj-fade-up 0.7s ease forwards; }
-        .filter-pill  { cursor: pointer; transition: all 0.25s ease; border: none; }
-        .filter-pill:hover { transform: translateY(-1px); }
+        .proj-fade-up { animation: proj-fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .filter-pill  { cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: none; }
+        .filter-pill:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .filter-pill:active { transform: translateY(0); }
       `}</style>
 
       {/* Ambient glows */}
@@ -604,8 +618,8 @@ const Projects = () => {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-            gap: 16,
+            gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+            gap: 24,
           }}
         >
           {filtered.map((project, i) => (

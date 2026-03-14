@@ -133,13 +133,14 @@ const ExpCard = ({ exp, index, onViewCert }) => {
           borderRadius: 14,
           overflow: "hidden",
           background: hovered
-            ? "rgba(255,255,255,0.04)"
-            : "rgba(255,255,255,0.025)",
-          border: `1px solid ${hovered ? `${exp.accent}40` : "rgba(255,255,255,0.07)"}`,
+            ? "rgba(255,255,255,0.05)"
+            : "rgba(255,255,255,0.03)",
+          border: `1px solid ${hovered ? `${exp.accent}50` : "rgba(255,255,255,0.08)"}`,
           boxShadow: hovered
-            ? `0 12px 32px rgba(0,0,0,0.35), 0 0 0 1px ${exp.accent}18`
+            ? `0 20px 40px rgba(0,0,0,0.45), 0 0 0 1px ${exp.accent}25`
             : "none",
-          transition: "all 0.3s ease",
+          transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+          backdropFilter: "blur(10px)",
         }}
       >
         {/* Top accent bar */}
@@ -347,7 +348,7 @@ const Experience = () => {
           from { opacity:0; transform:translateY(24px); }
           to   { opacity:1; transform:translateY(0); }
         }
-        .exp-fade-up { animation: exp-fade-up 0.7s ease forwards; }
+        .exp-fade-up { animation: exp-fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
         /* Modal backdrop */
         .cert-modal-backdrop {

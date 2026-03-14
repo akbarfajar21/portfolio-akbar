@@ -100,6 +100,7 @@ const Contact = () => {
     boxSizing: "border-box",
     boxShadow:
       focusedField === field ? "0 0 0 3px rgba(45,212,191,0.08)" : "none",
+    backdropFilter: "blur(8px)",
   });
 
   return (
@@ -119,7 +120,7 @@ const Contact = () => {
           from { opacity:0; transform:translateY(24px); }
           to   { opacity:1; transform:translateY(0); }
         }
-        .contact-fade-up { animation: contact-fade-up 0.7s ease forwards; }
+        .contact-fade-up { animation: contact-fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         ::placeholder { color: #334155 !important; }
         textarea { resize: vertical; }
       `}</style>
@@ -280,9 +281,10 @@ const Contact = () => {
           <div
             style={{
               borderRadius: 14,
-              background: "rgba(255,255,255,0.025)",
-              border: "1px solid rgba(255,255,255,0.07)",
+              background: "rgba(255,255,255,0.03)",
+              border: "1px solid rgba(255,255,255,0.08)",
               padding: "28px 28px",
+              backdropFilter: "blur(12px)",
             }}
           >
             {/* Top accent */}
@@ -465,9 +467,10 @@ const Contact = () => {
             <div
               style={{
                 borderRadius: 14,
-                background: "rgba(255,255,255,0.025)",
-                border: "1px solid rgba(255,255,255,0.07)",
+                background: "rgba(255,255,255,0.03)",
+                border: "1px solid rgba(255,255,255,0.08)",
                 padding: "22px",
+                backdropFilter: "blur(12px)",
               }}
             >
               <div
@@ -569,9 +572,10 @@ const Contact = () => {
             <div
               style={{
                 borderRadius: 14,
-                background: "rgba(255,255,255,0.025)",
-                border: "1px solid rgba(255,255,255,0.07)",
+                background: "rgba(255,255,255,0.03)",
+                border: "1px solid rgba(255,255,255,0.08)",
                 padding: "20px 22px",
+                backdropFilter: "blur(12px)",
               }}
             >
               <p

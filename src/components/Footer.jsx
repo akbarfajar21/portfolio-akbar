@@ -50,8 +50,8 @@ const Footer = () => {
   return (
     <footer
       style={{
-        background: "#0a0a0e",
-        borderTop: "1px solid rgba(45,212,191,0.1)",
+        background: "#0d0d0f",
+        borderTop: "1px solid rgba(255,255,255,0.05)",
         fontFamily: "'Inter', sans-serif",
         position: "relative",
         overflow: "hidden",
@@ -59,20 +59,20 @@ const Footer = () => {
     >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        .footer-nav-link { transition: color 0.22s ease; }
-        .footer-nav-link:hover { color: #2dd4bf !important; }
-        .footer-social-btn { transition: all 0.25s ease; }
-        .footer-social-btn:hover { transform: translateY(-2px); }
-        .scroll-top-btn { transition: all 0.3s ease; }
-        .scroll-top-btn:hover { background: rgba(45,212,191,0.2) !important; border-color: rgba(45,212,191,0.5) !important; transform: translateY(-2px); }
+        .footer-nav-link { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .footer-nav-link:hover { color: #2dd4bf !important; transform: translateX(4px); }
+        .footer-social-btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .footer-social-btn:hover { transform: translateY(-3px); background: rgba(255,255,255,0.06) !important; border-color: rgba(255,255,255,0.15) !important; }
+        .scroll-top-btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .scroll-top-btn:hover { background: rgba(45,212,191,0.15) !important; border-color: rgba(45,212,191,0.4) !important; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(45,212,191,0.1); }
       `}</style>
 
-      {/* Top gradient line */}
+      {/* Top accent bar */}
       <div
         style={{
-          height: 1,
-          background:
-            "linear-gradient(90deg, transparent, rgba(45,212,191,0.3), rgba(251,191,36,0.2), transparent)",
+          height: 2,
+          background: "linear-gradient(90deg, #2dd4bf, #34d399, #fbbf24, transparent)",
+          opacity: 0.15,
         }}
       />
 
@@ -80,13 +80,12 @@ const Footer = () => {
       <div
         style={{
           position: "absolute",
-          bottom: 0,
+          top: 0,
           left: "50%",
           transform: "translateX(-50%)",
-          width: 500,
-          height: 120,
-          background:
-            "radial-gradient(ellipse, rgba(45,212,191,0.04) 0%, transparent 70%)",
+          width: 600,
+          height: 150,
+          background: "radial-gradient(ellipse at top, rgba(45,212,191,0.05) 0%, transparent 70%)",
           pointerEvents: "none",
         }}
       />
@@ -95,7 +94,7 @@ const Footer = () => {
         style={{
           maxWidth: 1100,
           margin: "0 auto",
-          padding: "48px 24px 32px",
+          padding: "64px 24px 40px",
           position: "relative",
           zIndex: 1,
         }}
@@ -104,30 +103,28 @@ const Footer = () => {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr auto 1fr",
+            gridTemplateColumns: "1.2fr 1fr 1.2fr",
             alignItems: "start",
-            gap: 40,
-            marginBottom: 36,
+            gap: 60,
+            marginBottom: 64,
           }}
           className="footer-main"
         >
           {/* Left — Brand */}
-          <div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 8,
-                marginBottom: 10,
+                gap: 12,
               }}
             >
               <span
                 style={{
-                  fontSize: "1.2rem",
-                  fontWeight: 800,
+                  fontSize: "1.45rem",
+                  fontWeight: 900,
                   letterSpacing: "-0.04em",
-                  background:
-                    "linear-gradient(135deg, #2dd4bf 0%, #34d399 50%, #fbbf24 100%)",
+                  background: "linear-gradient(135deg, #2dd4bf 0%, #34d399 50%, #fbbf24 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
@@ -135,30 +132,28 @@ const Footer = () => {
               >
                 akbar.dev
               </span>
-              <span
+              <div
                 style={{
-                  width: 6,
-                  height: 6,
+                  width: 8,
+                  height: 8,
                   borderRadius: "50%",
                   background: "#34d399",
-                  boxShadow: "0 0 8px rgba(52,211,153,0.8)",
-                  animation: "pulse-ft 2s ease infinite",
-                  flexShrink: 0,
+                  boxShadow: "0 0 12px rgba(52,211,153,0.8)",
+                  animation: "pulse-ft 2.5s ease-in-out infinite",
                 }}
               />
-              <style>{`@keyframes pulse-ft { 0%,100%{opacity:1}50%{opacity:0.4} }`}</style>
+              <style>{`@keyframes pulse-ft { 0%,100%{opacity:1; transform:scale(1);} 50%{opacity:0.4; transform:scale(0.8);} }`}</style>
             </div>
             <p
               style={{
-                fontSize: "0.82rem",
-                color: "#334155",
-                lineHeight: 1.7,
-                maxWidth: 220,
+                fontSize: "0.9rem",
+                color: "#475569",
+                lineHeight: 1.8,
+                maxWidth: 320,
                 margin: 0,
               }}
             >
-              Full Stack Developer dari Tambun, Bekasi. Membangun produk digital
-              modern yang indah dan fungsional.
+              Junior Full Stack Developer yang berdedikasi untuk menciptakan pengalaman digital yang intuitif dan berdampak sosial tinggi.
             </p>
           </div>
 
@@ -166,27 +161,36 @@ const Footer = () => {
           <div style={{ textAlign: "center" }}>
             <p
               style={{
-                fontSize: 10,
+                fontSize: 11,
                 color: "#1e293b",
                 textTransform: "uppercase",
-                letterSpacing: "0.1em",
-                fontWeight: 700,
-                marginBottom: 14,
+                letterSpacing: "0.15em",
+                fontWeight: 800,
+                marginBottom: 20,
               }}
             >
               Navigasi
             </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: "10px 24px",
+                maxWidth: 240,
+                margin: "0 auto",
+              }}
+            >
               {navLinks.map((link, i) => (
                 <a
                   key={i}
                   href={link.href}
                   className="footer-nav-link"
                   style={{
-                    fontSize: "0.82rem",
-                    color: "#334155",
+                    fontSize: "0.85rem",
+                    color: "#64748b",
                     textDecoration: "none",
                     fontWeight: 500,
+                    textAlign: "left",
                   }}
                 >
                   {link.label}
@@ -201,24 +205,24 @@ const Footer = () => {
               display: "flex",
               flexDirection: "column",
               alignItems: "flex-end",
-              gap: 16,
+              gap: 24,
             }}
           >
             <div>
               <p
                 style={{
-                  fontSize: 10,
+                  fontSize: 11,
                   color: "#1e293b",
                   textTransform: "uppercase",
-                  letterSpacing: "0.1em",
-                  fontWeight: 700,
-                  marginBottom: 12,
+                  letterSpacing: "0.15em",
+                  fontWeight: 800,
+                  marginBottom: 16,
                   textAlign: "right",
                 }}
               >
-                Sosial
+                Media Sosial
               </p>
-              <div style={{ display: "flex", gap: 8 }}>
+              <div style={{ display: "flex", gap: 10 }}>
                 {socialLinks.map((s, i) => (
                   <a
                     key={i}
@@ -228,16 +232,17 @@ const Footer = () => {
                     title={s.label}
                     className="footer-social-btn"
                     style={{
-                      width: 34,
-                      height: 34,
-                      borderRadius: 9,
+                      width: 38,
+                      height: 38,
+                      borderRadius: 11,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
                       background: "rgba(255,255,255,0.03)",
-                      border: "1px solid rgba(255,255,255,0.07)",
+                      border: "1px solid rgba(255,255,255,0.08)",
                       color: s.accent,
                       textDecoration: "none",
+                      backdropFilter: "blur(8px)",
                     }}
                   >
                     {s.icon}
@@ -250,25 +255,25 @@ const Footer = () => {
             <button
               onClick={scrollToTop}
               className="scroll-top-btn"
-              title="Kembali ke atas"
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 6,
-                padding: "7px 13px",
-                borderRadius: 9,
-                background: "rgba(45,212,191,0.06)",
+                gap: 8,
+                padding: "8px 16px",
+                borderRadius: 10,
+                background: "rgba(45,212,191,0.08)",
                 border: "1px solid rgba(45,212,191,0.2)",
                 color: "#2dd4bf",
-                fontSize: "0.75rem",
-                fontWeight: 600,
+                fontSize: "0.8rem",
+                fontWeight: 700,
                 cursor: "pointer",
                 letterSpacing: "0.03em",
                 fontFamily: "'Inter', sans-serif",
+                backdropFilter: "blur(8px)",
               }}
             >
-              <FaArrowUp size={11} />
-              Ke Atas
+              <FaArrowUp size={12} />
+              Scroll ke Atas
             </button>
           </div>
         </div>
@@ -276,51 +281,88 @@ const Footer = () => {
         {/* ── Bottom bar ── */}
         <div
           style={{
-            paddingTop: 20,
-            borderTop: "1px solid rgba(255,255,255,0.04)",
+            paddingTop: 32,
+            borderTop: "1px solid rgba(255,255,255,0.05)",
             display: "flex",
             flexWrap: "wrap",
             alignItems: "center",
             justifyContent: "space-between",
-            gap: 8,
+            gap: 16,
           }}
         >
-          <p style={{ margin: 0, fontSize: 12, color: "#1e293b" }}>
-            © {new Date().getFullYear()} Muhammad Akbar Fajar. All rights
-            reserved.
+          <p style={{ margin: 0, fontSize: 13, color: "#334155", fontWeight: 500 }}>
+            © {new Date().getFullYear()} <span style={{ color: "#475569" }}>Muhammad Akbar Fajar</span>. Semua hak dilindungi.
           </p>
-          <p
+          <div
             style={{
-              margin: 0,
-              fontSize: 12,
-              color: "#1e293b",
               display: "flex",
               alignItems: "center",
-              gap: 5,
+              gap: 8,
+              padding: "6px 14px",
+              borderRadius: 99,
+              background: "rgba(255,255,255,0.02)",
+              border: "1px solid rgba(255,255,255,0.04)",
             }}
           >
-            Crafted with Fajar
+            <span style={{ fontSize: 12, color: "#334155", fontWeight: 500 }}>
+              Dibuat dengan
+            </span>
             <FaHeart
-              size={11}
+              size={12}
               style={{
                 color: "#f87171",
-                animation: "pulse-ft 1.5s ease infinite",
+                animation: "heartBeat 1.5s ease-in-out infinite",
               }}
             />
-            in Indonesia
-          </p>
+            <span style={{ fontSize: 12, color: "#334155", fontWeight: 500 }}>
+              di Bekasi, Indonesia
+            </span>
+            <style>{`
+              @keyframes heartBeat {
+                0%, 100% { transform: scale(1); }
+                10%, 30% { transform: scale(1.2); }
+                20% { transform: scale(1.1); }
+              }
+            `}</style>
+          </div>
         </div>
       </div>
 
-      {/* Responsive */}
+      {/* Responsive adjustments */}
       <style>{`
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
+          .footer-main {
+            grid-template-columns: 1fr 1fr !important;
+            gap: 48px;
+          }
+          .footer-main > div:first-child {
+            grid-column: span 2;
+            text-align: center;
+            align-items: center;
+          }
+        }
+        @media (max-width: 600px) {
           .footer-main {
             grid-template-columns: 1fr !important;
             text-align: center;
           }
+          .footer-main > div:first-child {
+            grid-column: span 1;
+          }
           .footer-main > div:last-child {
             align-items: center !important;
+          }
+          .footer-main .footer-nav-link {
+            text-align: center;
+          }
+          .footer-main > div:nth-child(2) > div {
+            grid-template-columns: 1fr !important;
+          }
+          .footer-main > div:last-child > div {
+            text-align: center !important;
+          }
+          .footer-main > div:last-child > div > div {
+             justify-content: center !important;
           }
         }
       `}</style>
