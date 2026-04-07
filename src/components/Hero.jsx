@@ -1,10 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  SiNextdotjs,
+  SiTailwindcss,
+  SiFigma,
+  SiJavascript,
+} from "react-icons/si";
 import {
   FaTrain,
   FaChalkboardTeacher,
   FaUsers,
   FaArrowRight,
   FaCommentDots,
+  FaReact,
+  FaCheckCircle,
+  FaGlobe,
 } from "react-icons/fa";
 
 // ── Typewriter hook ───────────────────────────────────────────────────────────
@@ -104,9 +114,9 @@ const Hero = () => {
   const [mounted, setMounted] = useState(false);
   const roles = [
     "Full Stack Developer",
-    "UI/UX Enthusiast",
-    "IT Educator",
-    "React Specialist",
+    "Suka Eksplor UI/UX",
+    "Pengajar IT",
+    "React & Node.js Specialist",
   ];
   const role = useTypewriter(roles);
 
@@ -116,8 +126,8 @@ const Hero = () => {
 
   const stats = [
     { value: "3+", label: "Tahun Experience" },
-    { value: "20+", label: "Project Selesai" },
-    { value: "8+", label: "Sertifikat" },
+    { value: "9+", label: "Project Selesai" },
+    { value: "10+", label: "Sertifikat" },
   ];
 
   const techBadges = [
@@ -150,31 +160,31 @@ const Hero = () => {
   // Floating badge data — icons instead of emoji
   const floatingBadges = [
     {
-      icon: <FaTrain size={11} />,
-      label: "IT PT KAI",
-      color: "#fbbf24",
-      bg: "rgba(251,191,36,0.1)",
-      border: "rgba(251,191,36,0.28)",
-      style: { top: -24, left: -52 },
+      icon: <SiNextdotjs size={12} />,
+      label: "Next.js",
+      color: "#ffffff",
+      bg: "rgba(255,255,255,0.05)",
+      border: "rgba(255,255,255,0.15)",
+      style: { top: -20, left: -60 },
       delay: "0s",
     },
     {
-      icon: <FaChalkboardTeacher size={11} />,
-      label: "IT Teacher",
+      icon: <FaReact size={12} />,
+      label: "React Expert",
       color: "#2dd4bf",
-      bg: "rgba(45,212,191,0.1)",
-      border: "rgba(45,212,191,0.28)",
-      style: { top: "50%", right: -64 },
+      bg: "rgba(45,212,191,0.08)",
+      border: "rgba(45,212,191,0.22)",
+      style: { top: "45%", right: -75 },
       delay: "0.5s",
     },
     {
-      icon: <FaUsers size={11} />,
-      label: "Ex-Ketua OSIS",
-      color: "#34d399",
-      bg: "rgba(52,211,153,0.1)",
-      border: "rgba(52,211,153,0.28)",
-      style: { bottom: -24, left: -24 },
-      delay: "1s",
+      icon: <SiTailwindcss size={12} />,
+      label: "Tailwind UI",
+      color: "#38bdf8",
+      bg: "rgba(56,189,248,0.08)",
+      border: "rgba(56,189,248,0.22)",
+      style: { bottom: -20, left: -30 },
+      delay: "1.2s",
     },
   ];
 
@@ -246,13 +256,23 @@ const Hero = () => {
         .hex-glow    { animation: hex-pulse 3s ease-in-out infinite; }
         .scroll-dot  { animation: scroll-hint 2s ease infinite; }
 
-        .orb-ring { position:absolute; animation: orbit-ring 28s linear infinite; }
-        .orb1 { position:absolute; animation: orb1 9s linear infinite; }
+        .orb-ring { position:absolute; }
+        .orb1 { position:absolute; }
         .orb2 { position:absolute; animation: orb2 9s linear infinite; }
         .orb3 { position:absolute; animation: orb3 9s linear infinite; }
 
-        .stat-card { transition: transform 0.28s ease, box-shadow 0.28s ease; cursor:default; }
-        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 10px 24px rgba(45,212,191,0.14); }
+        .stat-card { 
+          transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); 
+          cursor: default; 
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+        }
+        .stat-card:hover { 
+          transform: translateY(-5px); 
+          background: rgba(255,255,255,0.05) !important;
+          border-color: rgba(45,212,191,0.3) !important;
+          box-shadow: 0 12px 32px rgba(0,0,0,0.4), 0 0 15px rgba(45,212,191,0.1); 
+        }
 
         .tech-pill { transition: transform 0.22s ease; }
         .tech-pill:hover { transform: translateY(-2px); }
@@ -277,27 +297,28 @@ const Hero = () => {
       <div
         style={{
           position: "absolute",
-          right: "8%",
-          top: "50%",
-          transform: "translateY(-50%)",
-          width: 480,
-          height: 480,
+          right: "-10%",
+          top: "10%",
+          width: 550,
+          height: 550,
           borderRadius: "50%",
           background:
-            "radial-gradient(circle, rgba(45,212,191,0.06) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(45,212,191,0.08) 0%, transparent 70%)",
+          filter: "blur(60px)",
           pointerEvents: "none",
         }}
       />
       <div
         style={{
           position: "absolute",
-          left: "-4%",
-          bottom: "0%",
-          width: 380,
-          height: 380,
+          left: "-5%",
+          bottom: "-5%",
+          width: 450,
+          height: 450,
           borderRadius: "50%",
           background:
-            "radial-gradient(circle, rgba(251,191,36,0.05) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(167,139,250,0.06) 0%, transparent 70%)",
+          filter: "blur(50px)",
           pointerEvents: "none",
         }}
       />
@@ -329,11 +350,12 @@ const Hero = () => {
               display: "inline-flex",
               alignItems: "center",
               gap: 8,
-              padding: "5px 14px 5px 10px",
+              padding: "6px 16px 6px 12px",
               borderRadius: 999,
-              background: "rgba(52,211,153,0.07)",
-              border: "1px solid rgba(52,211,153,0.2)",
-              marginBottom: 26,
+              background: "rgba(52,211,153,0.05)",
+              border: "1px solid rgba(52,211,153,0.12)",
+              marginBottom: 30,
+              backdropFilter: "blur(8px)",
             }}
           >
             <span
@@ -423,19 +445,21 @@ const Hero = () => {
               maxWidth: 490,
             }}
           >
-            Developer dari{" "}
+            Anak{" "}
             <span style={{ color: "#94a3b8", fontWeight: 500 }}>
               Tambun, Bekasi
             </span>{" "}
-            dengan pengalaman sebagai{" "}
-            <span style={{ color: "#2dd4bf", fontWeight: 600 }}>
-              IT Support PT KAI
-            </span>{" "}
-            dan{" "}
+            yang pernah handle IT di{" "}
+            <span style={{ color: "#2dd4bf", fontWeight: 600 }}>KAI</span> dan
+            sempat jadi{" "}
             <span style={{ color: "#fbbf24", fontWeight: 600 }}>
-              IT Teacher
+              Pengajar IT
+            </span>
+            . Sekarang lagi fokus bangun{" "}
+            <span style={{ color: "#2dd4bf", fontWeight: 600 }}>
+              Seeside Agency
             </span>{" "}
-            — membangun solusi digital yang cepat, bersih, dan modern.
+            buat bikin website yang rapi, kenceng, dan asik buat user.
           </p>
 
           {/* Tech pills */}
@@ -532,11 +556,13 @@ const Hero = () => {
                 className="stat-card"
                 style={{
                   flex: 1,
-                  padding: "12px 14px",
-                  borderRadius: 10,
+                  padding: "16px 20px",
+                  borderRadius: 14,
                   textAlign: "center",
                   background: "rgba(255,255,255,0.02)",
-                  border: "1px solid rgba(255,255,255,0.05)",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                  backdropFilter: "blur(10px)",
+                  transition: "all 0.3s ease",
                 }}
               >
                 <div
@@ -577,132 +603,279 @@ const Hero = () => {
             position: "relative",
           }}
         >
-          {/* Orbit ring container */}
-          <div
+          {/* Interactive ID Card */}
+          <motion.div
+            drag
+            dragConstraints={{ left: -50, right: 50, top: -50, bottom: 50 }}
+            whileHover={{ scale: 1.02 }}
+            whileDrag={{ scale: 1.05, cursor: "grabbing" }}
+            initial={{ opacity: 0, y: 20, rotate: -2 }}
+            animate={{ opacity: 1, y: 0, rotate: -2 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
             style={{
-              position: "absolute",
-              inset: 0,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              pointerEvents: "none",
+              position: "relative",
+              zIndex: 10,
+              width: 280,
+              padding: 16,
+              borderRadius: 24,
+              background: "rgba(255, 255, 255, 0.03)",
+              border: "1px solid rgba(255, 255, 255, 0.08)",
+              backdropFilter: "blur(20px)",
+              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
+              cursor: "grab",
             }}
           >
+            {/* Card Header/Status */}
             <div
-              className="orb-ring"
               style={{
-                width: 316,
-                height: 316,
-                borderRadius: "50%",
-                border: "1px dashed rgba(45,212,191,0.1)",
-                position: "absolute",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: 16,
               }}
-            />
-            <div className="orb1" style={{ position: "absolute" }}>
-              <div
-                style={{
-                  width: 9,
-                  height: 9,
-                  borderRadius: "50%",
-                  background: "#2dd4bf",
-                  boxShadow: "0 0 10px rgba(45,212,191,0.85)",
-                }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <div
+                  style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: "50%",
+                    background: "#2dd4bf",
+                    boxShadow: "0 0 8px #2dd4bf",
+                  }}
+                />
+                <span
+                  style={{
+                    fontSize: 10,
+                    fontWeight: 700,
+                    color: "#94a3b8",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                  }}
+                >
+                  Developer ID
+                </span>
+              </div>
+              <FaCheckCircle
+                size={14}
+                style={{ color: "#2dd4bf", opacity: 0.8 }}
               />
             </div>
-            <div className="orb2" style={{ position: "absolute" }}>
-              <div
-                style={{
-                  width: 7,
-                  height: 7,
-                  borderRadius: "50%",
-                  background: "#fbbf24",
-                  boxShadow: "0 0 10px rgba(251,191,36,0.85)",
-                }}
-              />
-            </div>
-            <div className="orb3" style={{ position: "absolute" }}>
-              <div
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: "50%",
-                  background: "#34d399",
-                  boxShadow: "0 0 10px rgba(52,211,153,0.85)",
-                }}
-              />
-            </div>
-          </div>
 
-          {/* Hexagon photo frame */}
-          <div style={{ position: "relative", zIndex: 2 }}>
-            <div
-              className="hex-frame hex-glow"
+            {/* KAI Highlight Badge */}
+            <motion.div
+              initial={{ x: 20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 1 }}
               style={{
-                width: 272,
-                height: 272,
-                background:
-                  "linear-gradient(135deg, #2dd4bf, #34d399, #fbbf24)",
-                padding: 3,
+                position: "absolute",
+                top: 50,
+                right: -25,
+                background: "#111116",
+                border: "1px solid rgba(255,255,255,0.12)",
+                padding: "6px 12px",
+                borderRadius: 12,
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
+                gap: 8,
+                boxShadow: "0 10px 25px rgba(0,0,0,0.5)",
+                zIndex: 20,
+                transform: "rotate(5deg)",
               }}
             >
               <div
-                className="hex-frame"
                 style={{
-                  width: "100%",
-                  height: "100%",
+                  width: 20,
+                  height: 20,
+                  borderRadius: 4,
                   overflow: "hidden",
-                  background: "#111116",
+                  background: "#fff",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
                 <img
-                  src="./foto-akbar.jpg"
-                  alt="Muhammad Akbar"
+                  src="/kai.jpg"
                   style={{
                     width: "100%",
                     height: "100%",
-                    objectFit: "cover",
-                    transition: "transform 0.55s ease",
-                    filter: "brightness(0.92)",
+                    objectFit: "contain",
                   }}
-                  onMouseEnter={(e) =>
-                    (e.target.style.transform = "scale(1.07)")
-                  }
-                  onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
                 />
+              </div>
+              <div style={{ textAlign: "left" }}>
+                <div style={{ fontSize: 8, color: "#64748b", fontWeight: 700 }}>
+                  PREVIOUS
+                </div>
+                <div
+                  style={{ fontSize: 10, color: "#f1f5f9", fontWeight: 800 }}
+                >
+                  IT LRT KAI
+                </div>
+              </div>
+            </motion.div>
+
+            {/* UNISCO / OSIS Highlight Badge */}
+            <motion.div
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 1.2 }}
+              style={{
+                position: "absolute",
+                top: 150,
+                left: -25,
+                background: "#111116",
+                border: "1px solid rgba(251,191,36,0.2)",
+                padding: "6px 12px",
+                borderRadius: 12,
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                boxShadow: "0 10px 25px rgba(0,0,0,0.5)",
+                zIndex: 20,
+                transform: "rotate(-8deg)",
+              }}
+            >
+              <div
+                style={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: 4,
+                  overflow: "hidden",
+                  background: "#fff",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <img
+                  src="/unisco.png"
+                  style={{ width: "80%", height: "80%", objectFit: "contain" }}
+                />
+              </div>
+              <div style={{ textAlign: "left" }}>
+                <div style={{ fontSize: 8, color: "#fbbf24", fontWeight: 700 }}>
+                  LEADERSHIP
+                </div>
+                <div
+                  style={{ fontSize: 10, color: "#f1f5f9", fontWeight: 800 }}
+                >
+                  Ex-Ketua OSIS
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Photo Container */}
+            <div
+              style={{
+                width: "100%",
+                aspectRatio: "1/1",
+                borderRadius: 16,
+                overflow: "hidden",
+                marginBottom: 20,
+                border: "1px solid rgba(255,255,255,0.05)",
+                background: "#000",
+              }}
+            >
+              <img
+                src="./foto-akbar.jpg"
+                alt="Akbar Fajar"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  filter: "contrast(1.05) brightness(1.05)",
+                }}
+              />
+            </div>
+
+            {/* Card Content */}
+            <div style={{ textAlign: "left" }}>
+              <h3
+                style={{
+                  margin: "0 0 4px",
+                  fontSize: "1.1rem",
+                  fontWeight: 800,
+                  color: "#f1f5f9",
+                  letterSpacing: "-0.01em",
+                }}
+              >
+                M. AKBAR FAJAR
+              </h3>
+              <p
+                style={{
+                  margin: "0 0 16px",
+                  fontSize: 12,
+                  color: "#2dd4bf",
+                  fontWeight: 600,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                Lead Developer @ Seeside
+              </p>
+
+              {/* Card Footer */}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-end",
+                  paddingTop: 16,
+                  borderTop: "1px solid rgba(255,255,255,0.05)",
+                }}
+              >
+                <div
+                  style={{ display: "flex", flexWrap: "wrap", gap: 6, flex: 1 }}
+                >
+                  {[SiNextdotjs, FaReact, SiTailwindcss].map((Icon, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        width: 24,
+                        height: 24,
+                        borderRadius: 6,
+                        background: "rgba(255,255,255,0.03)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        border: "1px solid rgba(255,255,255,0.05)",
+                      }}
+                    >
+                      <Icon size={12} style={{ color: "#64748b" }} />
+                    </div>
+                  ))}
+                </div>
+                <div style={{ textAlign: "right" }}>
+                  <div
+                    style={{ fontSize: 9, color: "#475569", fontWeight: 700 }}
+                  >
+                    JOINED
+                  </div>
+                  <div
+                    style={{ fontSize: 13, color: "#f1f5f9", fontWeight: 800 }}
+                  >
+                    2026
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Floating badges — icons only, no emoji */}
-            {floatingBadges.map((badge, i) => (
-              <div
-                key={i}
-                style={{
-                  position: "absolute",
-                  ...badge.style,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  padding: "6px 12px",
-                  borderRadius: 9,
-                  background: badge.bg,
-                  border: `1px solid ${badge.border}`,
-                  color: badge.color,
-                  fontSize: 11,
-                  fontWeight: 600,
-                  whiteSpace: "nowrap",
-                  backdropFilter: "blur(12px)",
-                  animation: `badge-float 3s ease-in-out ${badge.delay} infinite`,
-                  zIndex: 10,
-                }}
-              >
-                <span style={{ opacity: 0.85 }}>{badge.icon}</span>
-                {badge.label}
-              </div>
-            ))}
-          </div>
+            {/* Decorative pull handle */}
+            <div
+              style={{
+                position: "absolute",
+                bottom: -12,
+                left: "50%",
+                transform: "translateX(-50%)",
+                width: 40,
+                height: 4,
+                borderRadius: 2,
+                background: "rgba(255,255,255,0.1)",
+              }}
+            />
+          </motion.div>
         </div>
       </div>
 

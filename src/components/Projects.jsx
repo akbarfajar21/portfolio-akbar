@@ -1,12 +1,65 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FaGithub, FaExternalLinkAlt, FaStar } from "react-icons/fa";
+import { 
+  FaGithub, 
+  FaExternalLinkAlt, 
+  FaStar, 
+  FaTimes, 
+  FaLightbulb, 
+  FaCode, 
+  FaTools,
+  FaCheckCircle 
+} from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
 
 // ── Data ─────────────────────────────────────────────────────────────────────
 const projects = [
   {
+    title: "Seeside Digital Agency",
+    description:
+      "Website resmi agensi digital saya yang melayani jasa pembuatan website, desain UI/UX, dan solusi kreatif.",
+    problem:
+      "Sebagai agensi baru, Seeside butuh identitas digital yang kuat untuk membangun kepercayaan klien dan menunjukkan kualitas desain.",
+    solution:
+      "Membangun website dengan estetika modern, animasi halus (Framer Motion), dan performa tinggi agar klien langsung merasakan kualitas kerja kami.",
+    whyTech:
+      "React untuk komponen reusabel, Tailwind untuk styling cepat, dan Framer Motion untuk interaksi premium.",
+    features: ["Custom Animations", "Responsive Design", "Service Catalog"],
+    tech: ["React", "Tailwind CSS", "Framer Motion"],
+    image: "/seeside-logo.png",
+    demo: "https://seeside.site/",
+    code: null,
+    category: "Business",
+    featured: true,
+  },
+  {
+    title: "Website SMP Pembangunan Cibadak",
+    description:
+      "Profil sekolah SMP Pembangunan Cibadak yang sedang saya kembangkan agar lebih rapi dan lengkap informasinya.",
+    problem:
+      "Sekolah butuh media informasi online yang mudah diakses orang tua murid dan calon siswa baru.",
+    solution:
+      "Membuat website profil sekolah yang informatif dengan navigasi yang simpel dan desain yang bersih.",
+    whyTech:
+      "React digunakan agar pengelolaan konten ke depannya lebih mudah dengan sistem komponen.",
+    features: ["Info Kurikulum", "Galeri Sekolah", "Pendaftaran Online"],
+    tech: ["React", "Tailwind CSS", "Framer Motion"],
+    image: "/smppbcbd.png",
+    demo: "https://smppembangunancibadak.vercel.app/",
+    code: null,
+    category: "Education",
+    featured: true,
+  },
+  {
     title: "Website Yayasan Setinggi Langit",
     description:
-      "Platform donasi digital dan transparansi kegiatan sosial untuk yayasan kemanusiaan (fokus pada yatim & dhuafa).",
+      "Tempat donasi digital yang memudahkan orang bantu anak yatim & dhuafa secara transparan.",
+    problem:
+      "Proses donasi tradisional seringkali kurang transparan dan menyulitkan donatur dari luar kota.",
+    solution:
+      "Membangun portal donasi digital terintegrasi Payment Gateway untuk kemudahan transaksi dan transparansi data.",
+    whyTech:
+      "Supabase digunakan untuk database real-time dan sistem auth yang aman bagi pengelola yayasan.",
+    features: ["Payment Gateway", "Real-time Donation", "Transparency Report"],
     tech: ["React.js", "Tailwind CSS", "Supabase", "Mayar"],
     image: "/setinggilangit.png",
     demo: "https://setinggilangit.org/",
@@ -15,9 +68,34 @@ const projects = [
     featured: true,
   },
   {
+    title: "Website Himpunan Vokasi Humas UI",
+    description:
+      "Pusat informasi buat temen-temen Himpunan Vokasi Humas UI, isinya lengkap soal progja dan info terbaru.",
+    problem:
+      "Himpunan mahasiswa kesulitan mendistribusikan informasi program kerja secara terpusat.",
+    solution:
+      "Website landing page sebagai hub utama informasi, agenda, dan visi-misi organisasi.",
+    whyTech:
+      "Vite dipilih karena build time yang sangat cepat, cocok untuk update konten yang sering.",
+    features: ["Agenda Kegiatan", "Struktur Organisasi", "Landing Info"],
+    tech: ["React", "Tailwind CSS", "Vite"],
+    image: "/hmvokhum.png",
+    demo: "https://hmvokhumui.com/",
+    code: null,
+    category: "Organization",
+    featured: true,
+  },
+  {
     title: "Website UKM Teater UI",
     description:
-      "Website resmi UKM Teater Universitas Indonesia dengan informasi kegiatan, galeri, dan profil organisasi.",
+      "Wajah digital UKM Teater UI buat liat jadwal dan kegiatan mentas temen-temen di sana.",
+    problem:
+      "Jadwal pementasan teater yang sering luput dari perhatian publik dan anggota.",
+    solution:
+      "Website profil dengan kalender acara dan galeri dokumentasi pementasan yang estetik.",
+    whyTech:
+      "Supabase membantu menyimpan data agenda pementasan secara dinamis.",
+    features: ["Event Calendar", "Photo Gallery", "Internal Members Area"],
     tech: ["React", "Tailwind", "Supabase"],
     image: "/TeaterUI.png",
     demo: "https://ukmteaterui.com/",
@@ -28,7 +106,11 @@ const projects = [
   {
     title: "Organizo Task Manager",
     description:
-      "Aplikasi manajemen tugas modern dengan fitur task tracking, prioritas, dan tampilan yang intuitif.",
+      "Aplikasi buat nyatet tugas biar nggak berantakan, simpel dan gampang dipakenya.",
+    problem: "Banyak task manager yang terlalu kompleks dan lambat untuk penggunaan harian.",
+    solution: "Aplikasi minimalis fokus pada kegesitan input dan kejelasan status tugas.",
+    whyTech: "Zustand digunakan untuk state management yang ringan dan cepat.",
+    features: ["Task CRUD", "Drag & Drop", "Dark Mode"],
     tech: ["React", "Tailwind", "Supabase"],
     image: "/Organizo.jpg",
     demo: "https://organizo-taskmanager.vercel.app/",
@@ -39,7 +121,11 @@ const projects = [
   {
     title: "CoffeeShopMe",
     description:
-      "Toko kopi dengan fitur cart, checkout, dan realtime sync menggunakan Zustand & Supabase.",
+      "Simpel e-commerce buat jualan kopi yang integrasi langsung ke database.",
+    problem: "Pemilik kedai kopi kecil kesulitan go-digital dengan cara yang simpel.",
+    solution: "E-Commerce minimalis yang memudahkan pelanggan memesan kopi favorit.",
+    whyTech: "Eksperimen integrasi React dengan Supabase untuk backend tanpa server.",
+    features: ["Product Catalog", "Cart System", "Order Management"],
     tech: ["React", "Tailwind", "Supabase", "Zustand"],
     image: "/coffeeshopme.png",
     demo: "https://coffeeshopme.com",
@@ -50,7 +136,11 @@ const projects = [
   {
     title: "Image Generator Web",
     description:
-      "AI image generator berbasis prompt menggunakan React dan API image generation.",
+      "Eksperimen bikin gambar dari teks pake bantuan AI, tinggal ketik dapet gambar.",
+    problem: "Ingin mencoba integrasi API AI untuk menunjang kreativitas desain.",
+    solution: "Interface simpel yang menghubungkan prompt teks ke model AI Image Generation.",
+    whyTech: "Pure React & Tailwind untuk fokus pada logika integrasi API.",
+    features: ["AI Integration", "Prompt History", "Image Download"],
     tech: ["React", "Tailwind"],
     image: "/generator-image-web.png",
     demo: "https://generator-image-web.vercel.app",
@@ -59,42 +149,13 @@ const projects = [
     featured: false,
   },
   {
-    title: "Toko Online",
-    description:
-      "Website toko online sederhana dengan katalog produk dan tampilan yang bersih.",
-    tech: ["React", "Tailwind"],
-    image: "/project-toko-online.png",
-    demo: "https://project-toko-online.vercel.app",
-    code: null,
-    category: "E-Commerce",
-    featured: false,
-  },
-  {
-    title: "Website Hadist",
-    description:
-      "Pencarian dan tampilan Hadist menggunakan API hadist dengan UI simpel dan fokus.",
-    tech: ["React", "Tailwind", "API"],
-    image: "/project-hadist.png",
-    demo: "https://project-hadist.vercel.app",
-    code: null,
-    category: "Education",
-    featured: false,
-  },
-  {
-    title: "WebsiteFoods",
-    description:
-      "Katalog makanan dengan animasi menarik dan tampilan responsif yang modern.",
-    tech: ["React", "Tailwind"],
-    image: "/websitefoods.png",
-    demo: "https://websitefoods.vercel.app",
-    code: null,
-    category: "Food & Beverage",
-    featured: false,
-  },
-  {
     title: "SMA IT Baitul 'Ilmi",
     description:
-      "Website profil sekolah dengan hero, gallery, contact, dan navigasi dinamis.",
+      "Bikin tampilan profil sekolah SMA IT Baitul 'Ilmi biar makin profesional secara online.",
+    problem: "Kebutuhan profil sekolah yang representatif di era digital.",
+    solution: "Landing page profil yang menonjolkan keunggulan dan fasilitas sekolah.",
+    whyTech: "Menggunakan Tailwind untuk memastikan desain tetap modern dan ringan.",
+    features: ["School Profile", "Vision & Mission", "Contact Info"],
     tech: ["React", "Tailwind"],
     image: "/smaitbaitulilmi.png",
     demo: "https://smaitbaitulilmi.vercel.app",
@@ -111,12 +172,267 @@ const catColor = {
   "E-Commerce": "#34d399",
   "AI & ML": "#f472b6",
   Education: "#fbbf24",
-  "Food & Beverage": "#fb923c",
   "Social Impact": "#38bdf8",
+  Business: "#3b82f6",
+};
+
+// ── Project Modal ────────────────────────────────────────────────────────────
+const ProjectModal = ({ project, isOpen, onClose }) => {
+  if (!project) return null;
+  const accent = catColor[project.category] || "#2dd4bf";
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 1000,
+            background: "rgba(13,13,15,0.85)",
+            backdropFilter: "blur(12px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 24,
+          }}
+          onClick={onClose}
+        >
+          <motion.div
+            initial={{ scale: 0.9, y: 20, opacity: 0 }}
+            animate={{ scale: 1, y: 0, opacity: 1 }}
+            exit={{ scale: 0.9, y: 20, opacity: 0 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            style={{
+              width: "100%",
+              maxWidth: 820,
+              maxHeight: "90vh",
+              background: "#111116",
+              borderRadius: 24,
+              border: "1px solid rgba(255,255,255,0.08)",
+              overflow: "hidden",
+              position: "relative",
+              display: "flex",
+              flexDirection: "column",
+              boxShadow: "0 50px 100px -20px rgba(0,0,0,0.7)",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header / Image Area */}
+            <div style={{ position: "relative", height: 260, overflow: "hidden" }}>
+              <img
+                src={project.image}
+                alt={project.title}
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background: "linear-gradient(to top, #111116 0%, transparent 100%)",
+                }}
+              />
+              <button
+                onClick={onClose}
+                style={{
+                  position: "absolute",
+                  top: 20,
+                  right: 20,
+                  width: 40,
+                  height: 40,
+                  borderRadius: "50%",
+                  background: "rgba(0,0,0,0.5)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  color: "#fff",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  backdropFilter: "blur(8px)",
+                  zIndex: 2,
+                }}
+              >
+                <FaTimes size={18} />
+              </button>
+            </div>
+
+            {/* Content Area */}
+            <div
+              style={{
+                padding: "32px 40px 40px",
+                overflowY: "auto",
+                flex: 1,
+                scrollbarWidth: "thin",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  marginBottom: 24,
+                }}
+              >
+                <div>
+                  <span
+                    style={{
+                      fontSize: 12,
+                      fontWeight: 700,
+                      color: accent,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.1em",
+                      marginBottom: 8,
+                      display: "block",
+                    }}
+                  >
+                    {project.category}
+                  </span>
+                  <h2
+                    style={{
+                      margin: 0,
+                      fontSize: "2rem",
+                      fontWeight: 900,
+                      color: "#f1f5f9",
+                      letterSpacing: "-0.03em",
+                    }}
+                  >
+                    {project.title}
+                  </h2>
+                </div>
+                <div style={{ display: "flex", gap: 12 }}>
+                  <a
+                    href={project.demo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      padding: "10px 20px",
+                      borderRadius: 12,
+                      background: accent,
+                      color: "#0d0d0f",
+                      fontWeight: 700,
+                      fontSize: "0.85rem",
+                      textDecoration: "none",
+                    }}
+                  >
+                    <FaExternalLinkAlt size={12} /> Demo
+                  </a>
+                  {project.code && (
+                    <a
+                      href={project.code}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                        padding: "10px 20px",
+                        borderRadius: 12,
+                        background: "rgba(255,255,255,0.03)",
+                        border: "1px solid rgba(255,255,255,0.08)",
+                        color: "#f1f5f9",
+                        fontWeight: 700,
+                        fontSize: "0.85rem",
+                        textDecoration: "none",
+                      }}
+                    >
+                      <FaGithub size={14} /> Code
+                    </a>
+                  )}
+                </div>
+              </div>
+
+              {/* Case Study Grid */}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+                  gap: 32,
+                  marginTop: 40,
+                }}
+              >
+                <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+                  <section>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+                      <FaLightbulb color={accent} size={16} />
+                      <h4 style={{ margin: 0, fontSize: 14, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                        Masalahnya Apa?
+                      </h4>
+                    </div>
+                    <p style={{ margin: 0, fontSize: 15, color: "#64748b", lineHeight: 1.7 }}>
+                      {project.problem || "Menghadirkan solusi digital yang efisien dan estetik."}
+                    </p>
+                  </section>
+
+                  <section>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+                      <FaCheckCircle color={accent} size={16} />
+                      <h4 style={{ margin: 0, fontSize: 14, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                        Solusinya Bagaimana?
+                      </h4>
+                    </div>
+                    <p style={{ margin: 0, fontSize: 15, color: "#64748b", lineHeight: 1.7 }}>
+                      {project.solution || "Membangun antarmuka yang intuitif dengan performa optimal."}
+                    </p>
+                  </section>
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+                  <section>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+                      <FaCode color={accent} size={16} />
+                      <h4 style={{ margin: 0, fontSize: 14, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                        Kenapa Pake Tech Ini?
+                      </h4>
+                    </div>
+                    <p style={{ margin: 0, fontSize: 15, color: "#64748b", lineHeight: 1.7 }}>
+                      {project.whyTech || "Memastikan skalabilitas dan kenyamanan pengembang."}
+                    </p>
+                  </section>
+
+                  <section>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+                      <FaTools color={accent} size={16} />
+                      <h4 style={{ margin: 0, fontSize: 14, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                        Fitur Utama
+                      </h4>
+                    </div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                      {(project.features || project.tech).map((f, i) => (
+                        <span
+                          key={i}
+                          style={{
+                            fontSize: 12,
+                            fontWeight: 600,
+                            color: "#cbd5e1",
+                            background: "rgba(255,255,255,0.04)",
+                            padding: "6px 12px",
+                            borderRadius: 8,
+                            border: "1px solid rgba(255,255,255,0.06)",
+                          }}
+                        >
+                          {f}
+                        </span>
+                      ))}
+                    </div>
+                  </section>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
 };
 
 // ── Project Card ─────────────────────────────────────────────────────────────
-const ProjectCard = ({ project, index }) => {
+const ProjectCard = ({ project, index, onOpen }) => {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
   const [hovered, setHovered] = useState(false);
@@ -138,6 +454,7 @@ const ProjectCard = ({ project, index }) => {
       ref={ref}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={() => onOpen(project)}
       style={{
         borderRadius: 14,
         overflow: "hidden",
@@ -158,6 +475,7 @@ const ProjectCard = ({ project, index }) => {
         display: "flex",
         flexDirection: "column",
         backdropFilter: "blur(10px)",
+        cursor: "pointer",
       }}
     >
       {/* Image */}
@@ -304,10 +622,11 @@ const ProjectCard = ({ project, index }) => {
 
         {/* Action buttons */}
         <div style={{ display: "flex", gap: 8 }}>
-          <a
-            href={project.demo}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              window.open(project.demo, "_blank");
+            }}
             style={{
               flex: 1,
               display: "flex",
@@ -320,7 +639,8 @@ const ProjectCard = ({ project, index }) => {
               color: "#0d0d0f",
               fontSize: "0.78rem",
               fontWeight: 700,
-              textDecoration: "none",
+              border: "none",
+              cursor: "pointer",
               transition: "filter 0.2s, transform 0.2s",
               letterSpacing: "0.02em",
             }}
@@ -333,13 +653,14 @@ const ProjectCard = ({ project, index }) => {
           >
             <FaExternalLinkAlt size={11} />
             Live Demo
-          </a>
+          </button>
 
           {project.code && (
-            <a
-              href={project.code}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                window.open(project.code, "_blank");
+              }}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -352,7 +673,7 @@ const ProjectCard = ({ project, index }) => {
                 color: "#94a3b8",
                 fontSize: "0.78rem",
                 fontWeight: 600,
-                textDecoration: "none",
+                cursor: "pointer",
                 transition: "border-color 0.2s, color 0.2s",
                 whiteSpace: "nowrap",
               }}
@@ -367,7 +688,7 @@ const ProjectCard = ({ project, index }) => {
             >
               <FaGithub size={13} />
               Code
-            </a>
+            </button>
           )}
         </div>
       </div>
@@ -378,8 +699,21 @@ const ProjectCard = ({ project, index }) => {
 // ── Main component ────────────────────────────────────────────────────────────
 const Projects = () => {
   const [activeFilter, setActiveFilter] = useState("All");
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const headerRef = useRef(null);
   const [headerVisible, setHeaderVisible] = useState(false);
+
+  const openModal = (project) => {
+    setSelectedProject(project);
+    setIsModalOpen(true);
+    document.body.style.overflow = "hidden";
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    document.body.style.overflow = "unset";
+  };
 
   useEffect(() => {
     const obs = new IntersectionObserver(
@@ -623,9 +957,21 @@ const Projects = () => {
           }}
         >
           {filtered.map((project, i) => (
-            <ProjectCard key={project.title} project={project} index={i} />
+            <ProjectCard 
+              key={project.title} 
+              project={project} 
+              index={i} 
+              onOpen={openModal} 
+            />
           ))}
         </div>
+
+        {/* Project Modal */}
+        <ProjectModal 
+          project={selectedProject} 
+          isOpen={isModalOpen} 
+          onClose={closeModal} 
+        />
 
         {/* ── Footer count ── */}
         <div

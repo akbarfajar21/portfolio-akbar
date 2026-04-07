@@ -6,17 +6,30 @@ import {
   FaFileAlt,
   FaTimes,
   FaCalendarAlt,
+  FaExternalLinkAlt,
 } from "react-icons/fa";
 
 // ── Data ─────────────────────────────────────────────────────────────────────
 const experiences = [
+  {
+    title: "Founder & Lead Developer",
+    organization: "Seeside Agency",
+    date: "2026 – Present",
+    type: "Business",
+    description:
+      "Membangun dan memimpin agensi digital yang berfokus pada jasa pembuatan website, desain UI/UX, dan penyediaan solusi teknologi untuk klien.",
+    logo: "/seeside-logo.png",
+    websiteUrl: "https://seeside.site/",
+    accent: "#38bdf8",
+    icon: <FaLaptopCode />,
+  },
   {
     title: "Ketua OSIS UNISCO",
     organization: "UNISCO",
     date: "Jun 2024 – Mar 2025",
     type: "Organization",
     description:
-      "Memimpin organisasi OSIS UNISCO, mengkoordinasi kegiatan siswa, menyelenggarakan event internal-eksternal, serta menjadi penghubung strategis antara pihak sekolah dan siswa.",
+      "Memimpin organisasi OSIS, mengelola berbagai acara, serta menjadi jembatan komunikasi antara siswa dan pihak sekolah.",
     logo: "/unisco.png",
     certificateUrl: "/sertifikat-unisco.png",
     accent: "#fbbf24",
@@ -28,7 +41,7 @@ const experiences = [
     date: "Mar 2024",
     type: "Teaching",
     description:
-      "Menjadi pengajar praktik untuk mata pelajaran Teknologi Informasi. Memberikan materi dasar-dasar komputer dan pengembangan web dengan pendekatan interaktif dan praktis.",
+      "Mengajar materi dasar komputer dan pembuatan website untuk siswa SMP agar lebih melek teknologi.",
     logo: "/istiqlal.png",
     certificateUrl: "/sertifikat-istiqlal.png",
     accent: "#34d399",
@@ -40,7 +53,7 @@ const experiences = [
     date: "Jan 2024 – Feb 2024",
     type: "Internship",
     description:
-      "Bertugas sebagai staf IT Support, membantu pengelolaan perangkat keras dan lunak, instalasi sistem, troubleshooting jaringan, serta dokumentasi IT di lingkungan operasional LRT Jabodebek.",
+      "Membantu tim IT dalam mengelola software, hardware, serta troubleshooting jaringan di lingkungan operasional LRT Jabodebek.",
     logo: "/kai.jpg",
     certificateUrl: "/sertifikat-kai.png",
     accent: "#2dd4bf",
@@ -276,38 +289,74 @@ const ExpCard = ({ exp, index, onViewCert }) => {
             {exp.description}
           </p>
 
-          {/* Certificate button */}
-          {exp.certificateUrl && (
-            <button
-              onClick={() => onViewCert(exp.certificateUrl)}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "6px 14px",
-                borderRadius: 8,
-                fontSize: "0.78rem",
-                fontWeight: 600,
-                color: exp.accent,
-                background: `${exp.accent}10`,
-                border: `1px solid ${exp.accent}30`,
-                cursor: "pointer",
-                transition: "all 0.25s ease",
-                letterSpacing: "0.02em",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = `${exp.accent}20`;
-                e.currentTarget.style.borderColor = `${exp.accent}55`;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = `${exp.accent}10`;
-                e.currentTarget.style.borderColor = `${exp.accent}30`;
-              }}
-            >
-              <FaFileAlt size={11} />
-              Lihat Sertifikat
-            </button>
-          )}
+          {/* Certificate or Website button */}
+          <div style={{ display: "flex", gap: 8 }}>
+            {exp.certificateUrl && (
+              <button
+                onClick={() => onViewCert(exp.certificateUrl)}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  padding: "6px 14px",
+                  borderRadius: 8,
+                  fontSize: "0.78rem",
+                  fontWeight: 600,
+                  color: exp.accent,
+                  background: `${exp.accent}10`,
+                  border: `1px solid ${exp.accent}30`,
+                  cursor: "pointer",
+                  transition: "all 0.25s ease",
+                  letterSpacing: "0.02em",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = `${exp.accent}20`;
+                  e.currentTarget.style.borderColor = `${exp.accent}55`;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = `${exp.accent}10`;
+                  e.currentTarget.style.borderColor = `${exp.accent}30`;
+                }}
+              >
+                <FaFileAlt size={11} />
+                Lihat Sertifikat
+              </button>
+            )}
+
+            {exp.websiteUrl && (
+              <a
+                href={exp.websiteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  padding: "6px 14px",
+                  borderRadius: 8,
+                  fontSize: "0.78rem",
+                  fontWeight: 600,
+                  color: exp.accent,
+                  background: `${exp.accent}10`,
+                  border: `1px solid ${exp.accent}30`,
+                  textDecoration: "none",
+                  transition: "all 0.25s ease",
+                  letterSpacing: "0.02em",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = `${exp.accent}20`;
+                  e.currentTarget.style.borderColor = `${exp.accent}55`;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = `${exp.accent}10`;
+                  e.currentTarget.style.borderColor = `${exp.accent}30`;
+                }}
+              >
+                <FaExternalLinkAlt size={11} />
+                Kunjungi Website
+              </a>
+            )}
+          </div>
         </div>
       </div>
     </div>

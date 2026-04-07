@@ -10,7 +10,18 @@ import {
   FaServer,
   FaWrench,
 } from "react-icons/fa";
-import { SiTailwindcss, SiSupabase, SiVite } from "react-icons/si";
+import {
+  SiTailwindcss,
+  SiSupabase,
+  SiVite,
+  SiNextdotjs,
+  SiFramer,
+  SiVercel,
+  SiPostman,
+  SiTypescript,
+  SiFirebase,
+  SiNodedotjs,
+} from "react-icons/si";
 import { PiPenNibFill } from "react-icons/pi";
 
 // ── Skill data ───────────────────────────────────────────────────────────────
@@ -18,74 +29,130 @@ const skills = [
   {
     name: "HTML",
     icon: <FaHtml5 />,
-    level: 90,
+    level: 93,
     category: "Frontend",
-    description: "Semantic markup & accessibility",
+    description: "Struktur standar konten web",
     iconColor: "#fb923c",
   },
   {
     name: "CSS",
     icon: <FaCss3Alt />,
-    level: 85,
+    level: 92,
     category: "Frontend",
-    description: "Modern layouts & animations",
+    description: "Desain layout dan animasi",
     iconColor: "#38bdf8",
   },
   {
     name: "JavaScript",
     icon: <FaJs />,
-    level: 88,
+    level: 94,
     category: "Frontend",
-    description: "ES6+ & modern features",
+    description: "Logika dan fitur interaktif",
     iconColor: "#fbbf24",
   },
   {
     name: "React",
     icon: <FaReact />,
-    level: 92,
+    level: 97,
     category: "Frontend",
-    description: "Hooks & component architecture",
+    description: "Bikin komponen berulang",
     iconColor: "#2dd4bf",
   },
   {
     name: "Tailwind",
     icon: <SiTailwindcss />,
-    level: 95,
+    level: 98,
     category: "Frontend",
-    description: "Utility-first CSS framework",
+    description: "Bikin styling kilat",
     iconColor: "#34d399",
   },
   {
     name: "Supabase",
     icon: <SiSupabase />,
-    level: 80,
+    level: 88,
     category: "Backend",
-    description: "Real-time database & auth",
+    description: "Backend dan database",
     iconColor: "#34d399",
   },
   {
     name: "Figma",
     icon: <FaFigma />,
-    level: 85,
+    level: 90,
     category: "Design",
-    description: "UI/UX design & prototyping",
+    description: "Desain tampilan awal",
     iconColor: "#f472b6",
   },
   {
     name: "GitHub",
     icon: <FaGithub />,
-    level: 90,
+    level: 95,
     category: "Tools",
-    description: "Version control & collaboration",
+    description: "Kontrol versi dan kolaborasi",
     iconColor: "#94a3b8",
   },
   {
     name: "Vite",
     icon: <SiVite />,
-    level: 88,
+    level: 94,
     category: "Tools",
-    description: "Fast build tool & dev server",
+    description: "Build tool super kenceng",
     iconColor: "#a78bfa",
+  },
+  {
+    name: "Next.js",
+    icon: <SiNextdotjs />,
+    level: 93,
+    category: "Frontend",
+    description: "Framework React paling populer",
+    iconColor: "#ffffff",
+  },
+  {
+    name: "TypeScript",
+    icon: <SiTypescript />,
+    level: 92,
+    category: "Frontend",
+    description: "Bikin kode lebih terstruktur",
+    iconColor: "#3178c6",
+  },
+  {
+    name: "Node.js",
+    icon: <SiNodedotjs />,
+    level: 86,
+    category: "Backend",
+    description: "Backend kenceng pake JavaScript",
+    iconColor: "#339933",
+  },
+  {
+    name: "Firebase",
+    icon: <SiFirebase />,
+    level: 89,
+    category: "Backend",
+    description: "Database realtime praktis",
+    iconColor: "#ffca28",
+  },
+  {
+    name: "Framer Motion",
+    icon: <SiFramer />,
+    level: 93,
+    category: "Design",
+    description: "Animasi web yang smooth",
+    iconColor: "#f472b6",
+  },
+  {
+    name: "Vercel",
+    icon: <SiVercel />,
+    level: 99,
+    category: "Tools",
+    description: "Deployment satu klik selesai",
+    iconColor: "#ffffff",
+  },
+  {
+    name: "Postman",
+    icon: <SiPostman />,
+    level: 92,
+    category: "Tools",
+    description: "Testing API jadi lebih gampang",
+    iconColor: "#ff6c37",
   },
 ];
 
@@ -382,8 +449,7 @@ const Skills = () => {
               lineHeight: 1.75,
             }}
           >
-            Teknologi yang saya kuasai untuk membangun produk digital modern
-            yang cepat, indah, dan fungsional.
+            Deretan tools dan bahasa pemrograman yang biasa saya pakai buat bikin produk digital.
           </p>
 
           {/* Divider */}
